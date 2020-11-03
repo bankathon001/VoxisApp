@@ -1,4 +1,4 @@
-package com.example.myapplication.digilink;
+package com.freecharge.voxisapp.digilink;
 
 import android.os.Bundle;
 import android.util.Log;

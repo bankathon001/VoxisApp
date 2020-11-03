@@ -1,4 +1,4 @@
-package com.example.myapplication.digilink;
+package com.freecharge.voxisapp.digilink;
 
 import android.content.Context;
 import android.util.AttributeSet;

@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.freecharge.voxisapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,7 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.myapplication.digilink.DigitalInkMainActivity;
+import com.example.myapplication.R;
+import com.freecharge.voxisapp.digilink.DigitalInkMainActivity;
+
 
 public class MainActivity extends AppCompatActivity {
     OnSwipeTouchListener onSwipeTouchListener;
@@ -29,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(myIntent);
             }
         });
-        onSwipeTouchListener = new OnSwipeTouchListener(MainActivity.this,this, findViewById(R.id.relativeLayout));
+        onSwipeTouchListener = new OnSwipeTouchListener(MainActivity.this, this, findViewById(R.id.relativeLayout));
     }
 
     public static class OnSwipeTouchListener implements View.OnTouchListener {
