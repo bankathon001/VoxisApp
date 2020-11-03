@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.freecharge.voxisapp;
 
 import org.junit.Test;
 
