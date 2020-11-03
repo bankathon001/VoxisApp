@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.myapplication.R;
+import com.freecharge.voxisapp.R;
 import com.freecharge.voxisapp.digilink.DigitalInkMainActivity;
 
 
