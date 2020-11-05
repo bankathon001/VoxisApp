@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //ActivityCompat.requestPermissions(MainActivity.this, new String[]{INTERNET}, requestCode);
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{INTERNET}, 10);
 
         AudioUtils.textToSpeech("Welcome to Voxis Voice Banking Application");
 
