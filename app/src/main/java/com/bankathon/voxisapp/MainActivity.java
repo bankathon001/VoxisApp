@@ -27,12 +27,12 @@ import java.util.logging.Logger;
 
 import static com.bankathon.voxisapp.util.BraodCaster.PLUGGEG_FLAG;
 
-public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
+public class MainActivity extends AppCompatActivity {
 
     private final Logger logger = Logger.getLogger(MainActivity.class.getName());
 
-    // TTS object
-    private TextToSpeech myTTS;
+    // TTS object implements TextToSpeech.OnInitListener
+    //private TextToSpeech myTTS;
 
 
     @Override
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             logger.info( "redirecting to Login Just After Opening");
             redirectIfJackConnected(jackIn);
         }
-        sayText();
+        //sayText();
         while(!jackIn) {
             logger.info( "Checked if Jack Plugged in or Not");
             try {
@@ -77,10 +77,10 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         return false;
     }
 
-    private void sayText() {
+/*    private void sayText() {
         logger.info( "text to speech init");
         myTTS.speak("Please Connect HeadPhoneJack", TextToSpeech.QUEUE_FLUSH, null, null);
-    }
+    }*/
 
     private void redirectIfJackConnected(boolean val) {
         if (val) {
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         animation.setRepeatMode(Animation.REVERSE); //animation will start from end point once ended.
         image.startAnimation(animation);
     }
-
+/*
     @Override
     public void onInit(int initStatus) {
         // check for successful instantiation
@@ -119,5 +119,5 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             Toast.makeText(this, "Sorry! Text To Speech failed...",
                     Toast.LENGTH_LONG).show();
         }
-    }
+    }*/
 }
