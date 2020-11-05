@@ -39,9 +39,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        showImage();
+        //showImage();
         //This method is used so that your splash activity
         //can cover the entire screen.
         //myTTS = new TextToSpeech(this,  this::onInit);
