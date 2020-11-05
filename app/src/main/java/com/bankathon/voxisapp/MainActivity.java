@@ -13,6 +13,7 @@ import android.telephony.TelephonyManager;
 import com.bankathon.voxisapp.apis.AwsApiClient;
 import com.bankathon.voxisapp.apis.response.RegisterCheck;
 import com.bankathon.voxisapp.ui.login.LoginActivity;
+import com.bankathon.voxisapp.util.TTSUtil;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -29,8 +30,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        TTSUtil ttsUtil = new TTSUtil();
+        ttsUtil.textToSpeech("Welcome to Voxis Voice Banking Application", this);
         boolean jackIn = getAudioDevicesStatus();
-        if(true) {
+        if(jackIn) {
             logger.info( "redirecting to Login Just After Opening");
             try {
                 redirectIfJackConnected(true);
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             while (!jackIn) {
+                ttsUtil.textToSpeech("Please Connect Headset to Continue", this);
                 logger.info("Checked if Jack Plugged in or Not");
                 try {
                     Thread.sleep(10000);
@@ -69,10 +73,6 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-/*    private void sayText() {
-        logger.info( "text to speech init");
-        myTTS.speak("Please Connect HeadPhoneJack", TextToSpeech.QUEUE_FLUSH, null, null);
-    }*/
 
     private void redirectIfJackConnected(boolean val) throws Exception{
         if (true) {
@@ -91,16 +91,15 @@ public class MainActivity extends AppCompatActivity {
             thread.join();
             if(flag.get()) {
                 Intent i = new Intent(this.getApplicationContext(),
-                        LoginActivity.class);
+                        CaptchaActivity.class);
                 //Intent is used to switch from one activity to another.
-                logger.info("Starting new Activity");
                 startActivity(i);
                 //invoke the SecondActivity.
 
                 finish();
             } else {
                 Intent i = new Intent(this.getApplicationContext(),
-                        LoginActivity.class);
+                        VoiceActivity.class);
                 //Intent is used to switch from one activity to another.
 
                 startActivity(i);
