@@ -5,6 +5,12 @@ import android.media.MediaPlayer;
 import android.os.Environment;
 import android.util.Log;
 
+import com.microsoft.cognitiveservices.speech.ResultReason;
+import com.microsoft.cognitiveservices.speech.SpeechConfig;
+import com.microsoft.cognitiveservices.speech.SpeechSynthesisCancellationDetails;
+import com.microsoft.cognitiveservices.speech.SpeechSynthesisResult;
+import com.microsoft.cognitiveservices.speech.SpeechSynthesizer;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -92,5 +98,38 @@ public class AudioUtils {
         return new File(path + "/aud-" + System.currentTimeMillis() + ".wav");
     }
 
+    static String speechSubscriptionKey = "e204c71506fd4bfd8a1a1f861088a35c";
+    static String serviceRegion = "eastus";
+
+    public static void textToSpeech(String text) {
+        //TextView outputMessage = this.findViewById(R.id.outputMessage);
+        //EditText speakText = this.findViewById(R.id.speakText);
+
+        try {
+            SpeechConfig speechConfig = SpeechConfig.fromSubscription(speechSubscriptionKey, serviceRegion);
+            assert (speechConfig != null);
+
+            SpeechSynthesizer synthesizer = new SpeechSynthesizer(speechConfig);
+
+            // Note: this will block the UI thread, so eventually, you want to register for the event
+            SpeechSynthesisResult result = synthesizer.SpeakText(text);
+            assert (result != null);
+
+            if (result.getReason() == ResultReason.SynthesizingAudioCompleted) {
+                //outputMessage.setText("Speech synthesis succeeded.");
+            } else if (result.getReason() == ResultReason.Canceled) {
+                String cancellationDetails =
+                        SpeechSynthesisCancellationDetails.fromResult(result).toString();
+                /*outputMessage.setText("Error synthesizing. Error detail: " +
+                        System.lineSeparator() + cancellationDetails +
+                        System.lineSeparator() + "Did you update the subscription info?");*/
+            }
+
+            result.close();
+        } catch (Exception ex) {
+            Log.e("SpeechSDKDemo", "unexpected " + ex.getMessage());
+            //assert(false);
+        }
+    }
 
 }

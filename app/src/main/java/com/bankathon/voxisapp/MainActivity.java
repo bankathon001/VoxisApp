@@ -1,6 +1,7 @@
 package com.bankathon.voxisapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.telephony.TelephonyManager;
 import com.bankathon.voxisapp.apis.AwsApiClient;
 import com.bankathon.voxisapp.apis.response.RegisterCheck;
 import com.bankathon.voxisapp.ui.login.LoginActivity;
+import com.bankathon.voxisapp.util.AudioUtils;
 import com.bankathon.voxisapp.util.TTSUtil;
 
 import java.io.IOException;
@@ -20,6 +22,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
 import retrofit2.Call;
+
+import static android.Manifest.permission.INTERNET;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,9 +34,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        TTSUtil ttsUtil = new TTSUtil();
-        ttsUtil.textToSpeech("Welcome to Voxis Voice Banking Application", this);
-        boolean jackIn = getAudioDevicesStatus();
+
+        //ActivityCompat.requestPermissions(MainActivity.this, new String[]{INTERNET}, requestCode);
+
+        AudioUtils.textToSpeech("Welcome to Voxis Voice Banking Application");
+
+        boolean jackIn =true;// getAudioDevicesStatus();
         if(jackIn) {
             logger.info( "redirecting to Login Just After Opening");
             try {
@@ -42,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             while (!jackIn) {
-                ttsUtil.textToSpeech("Please Connect Headset to Continue", this);
+                //ttsUtil.textToSpeech("Please Connect Headset to Continue", this);
                 logger.info("Checked if Jack Plugged in or Not");
                 try {
                     Thread.sleep(10000);
