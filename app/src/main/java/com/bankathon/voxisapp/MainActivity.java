@@ -11,6 +11,8 @@ import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -19,11 +21,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bankathon.voxisapp.apis.AwsApiClient;
+import com.bankathon.voxisapp.apis.response.GetBalanceResponse;
+import com.bankathon.voxisapp.apis.response.RegisterCheck;
 import com.bankathon.voxisapp.ui.login.LoginActivity;
 
 import java.lang.reflect.Array;
 import java.util.Locale;
 import java.util.logging.Logger;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.bankathon.voxisapp.util.BraodCaster.PLUGGEG_FLAG;
 
@@ -33,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
 
     // TTS object implements TextToSpeech.OnInitListener
     //private TextToSpeech myTTS;
+
+    private boolean isRegistered;
 
 
     @Override
@@ -82,15 +93,48 @@ public class MainActivity extends AppCompatActivity {
 
     private void redirectIfJackConnected(boolean val) {
         if (val) {
-            Intent i = new Intent(MainActivity.this,
-                    LoginActivity.class);
-            //Intent is used to switch from one activity to another.
+            TelephonyManager tMgr = (TelephonyManager)getApplication()
+                    .getSystemService(Context.TELEPHONY_SERVICE);
+            String mPhoneNumber = tMgr.getLine1Number();
+            check(mPhoneNumber);
+            if(isRegistered) {
+                Intent i = new Intent(MainActivity.this,
+                        LoginActivity.class);
+                //Intent is used to switch from one activity to another.
 
-            startActivity(i);
-            //invoke the SecondActivity.
+                startActivity(i);
+                //invoke the SecondActivity.
 
-            finish();
+                finish();
+            } else {
+                Intent i = new Intent(MainActivity.this,
+                        LoginActivity.class);
+                //Intent is used to switch from one activity to another.
+
+                startActivity(i);
+                //invoke the SecondActivity.
+
+                finish();
+            }
         }
+    }
+
+    private void check(String number) {
+        Call<RegisterCheck> registerCheckCall =
+                AwsApiClient.getInstance().getMyApi().checkIfRegistered("9971971868");
+
+        registerCheckCall.enqueue(new Callback<RegisterCheck>() {
+            @Override
+            public void onResponse(Call<RegisterCheck> call, Response<RegisterCheck> response) {
+                isRegistered = response.body().getFlag();
+            }
+
+            @Override
+            public void onFailure(Call<RegisterCheck> call, Throwable t) {
+                Log.e("error", "error is : " + t.getMessage());
+            }
+        });
+
     }
 
 /*    private void showImage() {

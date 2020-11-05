@@ -1,6 +1,7 @@
 package com.bankathon.voxisapp.apis;
 
 import com.bankathon.voxisapp.apis.response.GetBalanceResponse;
+import com.bankathon.voxisapp.apis.response.RegisterCheck;
 
 import java.util.List;
 
@@ -15,4 +16,7 @@ public interface AwsApi {
 
     @GET("get-balance")
     Call<GetBalanceResponse> getUserBalanceByMobileNumber(@Query("mobileNumber") String mobileNumber);
+
+    @GET("is-registered")
+    Call<RegisterCheck> checkIfRegistered(@Query("mobileNumber") String mobileNumber);
 }
