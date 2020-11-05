@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
     private void sayText() {
         logger.info( "text to speech init");
-        myTTS.speak("Please Connect HeadPhoneJack", TextToSpeech.QUEUE_FLUSH, null);
+        myTTS.speak("Please Connect HeadPhoneJack", TextToSpeech.QUEUE_FLUSH, null, null);
     }
 
     private void redirectIfJackConnected(boolean val) {
