@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             logger.info( "redirecting to Login Just After Opening");
             redirectIfJackConnected(jackIn);
         }
-        sayText();
+        //sayText();
         while(!jackIn) {
             logger.info( "Checked if Jack Plugged in or Not");
             try {
