@@ -35,41 +35,37 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        myTTS = new TextToSpeech(this,  this::onInit);
         setContentView(R.layout.activity_main);
-
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //This method is used so that your splash activity
         //can cover the entire screen.
-        setContentView(R.layout.activity_main);
-
-        //this will bind your MainActivity.class file with activity_main.
-        ImageView image = (ImageView) findViewById(R.id.imageView);
-        Animation animation = new AlphaAnimation(1, 0); //to change visibility from visible to invisible
-        animation.setDuration(4000); //1 second duration for each animation cycle
-        animation.setInterpolator(new LinearInterpolator());
-        animation.setRepeatCount(Animation.INFINITE); //repeating indefinitely
-        animation.setRepeatMode(Animation.REVERSE); //animation will start from end point once ended.
-        image.startAnimation(animation);
-
-        final boolean[] jackIn = {getAudioDevicesStatus()};
-        if(jackIn[0]) {
-            logger.info( "redirecting to Login Just After Opening");
-            redirectIfJackConnected(jackIn[0]);
-        }
-        while(!jackIn[0]) {
-            sayText();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    // Do something after 5s = 5000ms
-                    sayText();
-                    logger.info( "Checked if Jack Plugged in or Not");
-                   jackIn[0] = getAudioDevicesStatus();
+        myTTS = new TextToSpeech(this,  this::onInit);
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                showImage();
+                final boolean[] jackIn = {getAudioDevicesStatus()};
+                if(jackIn[0]) {
+                    logger.info( "redirecting to Login Just After Opening");
+                    redirectIfJackConnected(jackIn[0]);
                 }
-            }, 10000);
-        }
-        logger.info( "redirecting to Login");
-        redirectIfJackConnected(jackIn[0]);
+                sayText();
+                while(!jackIn[0]) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            sayText();
+                            // Do something after 5s = 5000ms
+                            logger.info( "Checked if Jack Plugged in or Not");
+                            jackIn[0] = getAudioDevicesStatus();
+                        }
+                    }, 10000);
+                }
+                logger.info( "redirecting to Login");
+                redirectIfJackConnected(jackIn[0]);
+            }
+        });
     }
 
     private boolean getAudioDevicesStatus() {
@@ -102,6 +98,17 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         }
     }
 
+    private void showImage() {
+        //this will bind your MainActivity.class file with activity_main.
+        ImageView image = (ImageView) findViewById(R.id.imageView);
+        Animation animation = new AlphaAnimation(1, 0); //to change visibility from visible to invisible
+        animation.setDuration(4000); //1 second duration for each animation cycle
+        animation.setInterpolator(new LinearInterpolator());
+        animation.setRepeatCount(Animation.INFINITE); //repeating indefinitely
+        animation.setRepeatMode(Animation.REVERSE); //animation will start from end point once ended.
+        image.startAnimation(animation);
+    }
+
     @Override
     public void onInit(int initStatus) {
         // check for successful instantiation
@@ -109,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             logger.info("TTS Success");
             if (myTTS.isLanguageAvailable(Locale.US) == TextToSpeech.LANG_AVAILABLE) {
                 myTTS.setLanguage(Locale.US);
-                this.getIntent().setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
             }
         } else if (initStatus == TextToSpeech.ERROR) {
             logger.info("TTS Failed");
