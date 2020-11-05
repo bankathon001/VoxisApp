@@ -40,7 +40,7 @@ public class CaptchaActivity extends Activity {
             if (inputFromUser != null) {
                 //AudioUtils.textToSpeech(inputFromUser);
                 if (!inputFromUser.equalsIgnoreCase(captchaString)) {
-                    AudioUtils.textToSpeech("Wrong Input");
+                    AudioUtils.textToSpeech("Wrong Input try again by saying " + captchaString);
                 } else {
                     break;
                 }
