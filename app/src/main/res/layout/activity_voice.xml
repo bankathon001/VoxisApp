@@ -1,30 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".VoiceActivity">
-        <EditText
-            android:layout_width="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="20dip">
+
+        <ImageView
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:hint="Tap to Speak"
-            android:id="@+id/text_voice"
-            />
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:backgroundTint="#F9F8FA"
-            android:src="@drawable/common_google_signin_btn_icon_dark_focused"
-            android:id="@+id/iv_mic"/>
+            android:src="@drawable/ic_launcher_background"
+            android:scaleType="fitCenter"/>
 
-        <ImageView
-            android:id="@+id/iv_mic_1"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_below="@id/iv_mic"
-            android:backgroundTint="#F9F8FA"
-            android:src="@drawable/logo_3" />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="app_info"
+            android:layout_weight="1.0"
+            android:textSize="20dip"/>
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btnStart"
+                    android:text="start_recording"
+                    android:layout_weight="1.0"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btnStop"
+                    android:text="stop_recording"
+                    android:layout_weight="1.0"/>
+        </LinearLayout>
 </LinearLayout>
