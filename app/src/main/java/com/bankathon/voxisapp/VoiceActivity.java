@@ -31,6 +31,11 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.UUID;
 
+import it.sauronsoftware.jave.AudioAttributes;
+import it.sauronsoftware.jave.Encoder;
+import it.sauronsoftware.jave.EncoderException;
+import it.sauronsoftware.jave.EncodingAttributes;
+
 public class VoiceActivity extends AppCompatActivity {
     public static final Integer RecordAudioRequestCode = 1;
     private SpeechRecognizer speechRecognizer;
@@ -72,7 +77,7 @@ public class VoiceActivity extends AppCompatActivity {
 
     private void startRecording() {
         String uuid = UUID.randomUUID().toString();
-        fileName = getCacheDir1();
+        fileName = getExternalCacheDir().getAbsolutePath()+"/voxisDir/aud.3gp";
         Log.i(MainActivity.class.getSimpleName(), fileName);
 
         recorder = new MediaRecorder();
@@ -94,18 +99,32 @@ public class VoiceActivity extends AppCompatActivity {
         if (recorder != null) {
             recorder.release();
             recorder = null;
+
+            File source = new File(fileName);
+            File target = getCacheDir1();
+
+
+            EncodingAttributes encodingAttributes = new EncodingAttributes();
+            encodingAttributes.setFormat("wav");
+
+            Encoder encoder = new Encoder();
+            try {
+                encoder.encode(source, target, encodingAttributes);
+            } catch (EncoderException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
-    public String getCacheDir1() {
+    public File getCacheDir1() {
         String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/voxisDir";
         File storageDir = new File(path);
         if (!storageDir.exists()) {
             storageDir.mkdirs();
             // This should never happen - log handled exception!
         }
-        return path + "/aud-" + System.currentTimeMillis() + ".wav";
+        return new File(path + "/aud-" + System.currentTimeMillis() + ".wav");
     }
 
 
