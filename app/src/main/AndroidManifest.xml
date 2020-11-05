@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
 
     <application
         android:networkSecurityConfig="@xml/network_security_config"
@@ -17,9 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VoxisApp">
         <activity
-            android:name=".ui.login.LoginActivity"
+android:name=".ui.login.LoginActivity"
             android:label="@string/title_activity_login"></activity>
-        <activity android:name=".VoiceActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
