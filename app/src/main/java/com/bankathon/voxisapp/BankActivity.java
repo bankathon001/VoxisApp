@@ -10,7 +10,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bankathon.voxisapp.apis.AwsApiClient;
+import com.bankathon.voxisapp.apis.request.ValidatePinRequest;
 import com.bankathon.voxisapp.apis.response.GetBalanceResponse;
+import com.bankathon.voxisapp.apis.response.ValidatePinStatus;
+import com.bankathon.voxisapp.util.AudioUtils;
+
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicReference;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,24 +38,36 @@ public class BankActivity extends AppCompatActivity {
                 fetchBalance();
             }
         });
+
+        AudioUtils.textToSpeech("What you want to do today");
+        String input = AudioUtils.speechToText();
+        if (input == null) {
+
+        } else if (input.toLowerCase().contains("balance")) {
+            GetBalanceResponse response = fetchBalance();
+            AudioUtils.textToSpeech("Your account balance is " + response.getBalance());
+        }
     }
 
-    private void fetchBalance() {
-        Call<GetBalanceResponse> getBalanceResponseCall = AwsApiClient.getInstance().getMyApi().getUserBalanceByMobileNumber("9971971868");
+    private GetBalanceResponse fetchBalance() {
+        AtomicReference<GetBalanceResponse> response = new AtomicReference<>();
+        Thread thread = new Thread(() -> {
+            Call<GetBalanceResponse> generateCaptcha =
+                    AwsApiClient.getInstance().getMyApi().getUserBalanceByMobileNumber("9582340663");
+            try {
 
-        getBalanceResponseCall.enqueue(new Callback<GetBalanceResponse>() {
-            @Override
-            public void onResponse(Call<GetBalanceResponse> call, Response<GetBalanceResponse> response) {
-                int bal = response.body().getBalance();
-                textView.setText("Balance is " + bal);
-            }
-
-            @Override
-            public void onFailure(Call<GetBalanceResponse> call, Throwable t) {
-                textView.setText("failed to fetch");
-                Log.e("error", "error is : " + t.getMessage());
+                response.set(generateCaptcha.execute().body());
+            } catch (IOException e) {
+                Log.i(e.toString(), "");
             }
         });
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            Log.i(e.toString(), "");
+        }
+        return response.get();
 
     }
 }

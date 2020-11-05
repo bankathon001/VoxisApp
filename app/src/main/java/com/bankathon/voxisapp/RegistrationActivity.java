@@ -55,7 +55,7 @@ public class RegistrationActivity extends Activity {
         AtomicReference<ValidatePinStatus> response = new AtomicReference<>();
         Thread thread = new Thread(() -> {
             ValidatePinRequest request = new ValidatePinRequest();
-            request.setMobileNumber("2345343234");
+            request.setMobileNumber("9582340663");
             request.setDebitPin(inputFromUser);
 
             Call<Response> generateCaptcha =
