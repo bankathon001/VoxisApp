@@ -85,7 +85,9 @@ public class AudioUtils {
         File file = new File(filePath);
         byte[] data = new byte[(int) (file).length()];
         try {
-            new FileInputStream(file).read(data);
+            FileInputStream fileInputStream = new FileInputStream(file);
+            fileInputStream.read(data);
+            return data;
         } catch (IOException e) {
             e.printStackTrace();
         }
