@@ -2,6 +2,7 @@ package com.freecharge.voxisapp.util;
 
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Environment;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -15,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.file.Files;
 import java.util.Locale;
 
 public class AudioUtils {
@@ -80,24 +82,12 @@ public class AudioUtils {
     }
 
     public static byte[] getByteArrayFromAudio(String filePath) {
-        // Open file
+        File file = new File(filePath);
+        byte[] data = new byte[(int) (file).length()];
         try {
-            RandomAccessFile f = new RandomAccessFile(filePath, "r");
-            // Get and check length
-            long longlength = f.length();
-            int length = (int) longlength;
-            if (length != longlength)
-                throw new IOException("File size >= 2 GB");
-            // Read file and return data
-            byte[] data = new byte[length];
-            f.readFully(data);
-            f.close();
-            return data;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            new FileInputStream(file).read(data);
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
         }
         return null;
     }
