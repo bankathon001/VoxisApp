@@ -29,6 +29,14 @@
             android:src="@drawable/common_google_signin_btn_icon_dark_focused"
             android:layout_alignParentRight="true"
             android:id="@+id/iv_mic"/>
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:backgroundTint="#F9F8FA"
+            android:layout_below="@id/iv_mic"
+            android:src="@drawable/logo_3"
+            android:id="@+id/iv_mic_1"/>
     </RelativeLayout>
 
 
