@@ -46,20 +46,12 @@ public class MainActivity extends AppCompatActivity {
             redirectIfJackConnected(jackIn[0]);
         }
         while(!jackIn[0]) {
+            sayText();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     // Do something after 5s = 5000ms
-                    TextToSpeech myTTS= null;
-                    TextToSpeech finalMyTTS = myTTS;
-                    myTTS = new TextToSpeech(getApplicationContext(),  new TextToSpeech.OnInitListener() {
-                        @Override
-                        public void onInit(int status) {
-                            if(status != TextToSpeech.ERROR) {
-                                finalMyTTS.setLanguage(Locale.UK);
-                            }
-                        }});
-                    myTTS.speak("Please Connect HeadPhoneJack", TextToSpeech.QUEUE_FLUSH, null);
+                    sayText();
                    jackIn[0] = getAudioDevicesStatus();
                 }
             }, 10000);
@@ -77,6 +69,19 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    private void sayText() {
+        TextToSpeech myTTS= null;
+        TextToSpeech finalMyTTS = myTTS;
+        myTTS = new TextToSpeech(getApplicationContext(),  new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    finalMyTTS.setLanguage(Locale.UK);
+                }
+            }});
+        myTTS.speak("Please Connect HeadPhoneJack", TextToSpeech.QUEUE_FLUSH, null);
     }
 
     private void redirectIfJackConnected(boolean val) {
