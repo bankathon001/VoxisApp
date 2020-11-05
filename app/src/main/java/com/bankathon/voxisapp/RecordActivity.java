@@ -48,7 +48,7 @@ public class RecordActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_voice);
+        setContentView(R.layout.activity_record);
 
         setButtonHandlers();
         enableButtons(false);
