@@ -25,6 +25,8 @@ import java.lang.reflect.Array;
 import java.util.Locale;
 import java.util.logging.Logger;
 
+import static com.bankathon.voxisapp.util.BraodCaster.PLUGGEG_FLAG;
+
 public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
     private final Logger logger = Logger.getLogger(MainActivity.class.getName());
@@ -44,25 +46,26 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         //can cover the entire screen.
         //myTTS = new TextToSpeech(this,  this::onInit);
         boolean jackIn = getAudioDevicesStatus();
-        if(jackIn) {
+        if(PLUGGEG_FLAG) {
             logger.info( "redirecting to Login Just After Opening");
-            redirectIfJackConnected(jackIn);
+            redirectIfJackConnected(PLUGGEG_FLAG);
         }
         //sayText();
-        while(!jackIn) {
+        while(!PLUGGEG_FLAG) {
             logger.info( "Checked if Jack Plugged in or Not");
             try {
                 Thread.sleep(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            jackIn = getAudioDevicesStatus();
+            //jackIn = getAudioDevicesStatus();
         }
         logger.info( "redirecting to Login");
-        redirectIfJackConnected(jackIn);
+        redirectIfJackConnected(PLUGGEG_FLAG);
     }
 
     private boolean getAudioDevicesStatus() {
+        this.recreate();
         AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         AudioDeviceInfo[] audioDevices = audioManager.getDevices(AudioManager.GET_DEVICES_ALL);
         for(AudioDeviceInfo deviceInfo : audioDevices){
