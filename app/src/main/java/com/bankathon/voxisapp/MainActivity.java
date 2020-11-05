@@ -101,19 +101,11 @@ public class MainActivity extends AppCompatActivity {
             if(flag.get()) {
                 Intent i = new Intent(this.getApplicationContext(),
                         CaptchaActivity.class);
-                //Intent is used to switch from one activity to another.
                 startActivity(i);
-                //invoke the SecondActivity.
-
                 finish();
             } else {
-                Intent i = new Intent(this.getApplicationContext(),
-                        VoiceActivity.class);
-                //Intent is used to switch from one activity to another.
-
+                Intent i = new Intent(this.getApplicationContext(), VoiceActivity.class);
                 startActivity(i);
-                //invoke the SecondActivity.
-
                 finish();
             }
         }

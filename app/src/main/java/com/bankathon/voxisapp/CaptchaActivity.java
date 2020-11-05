@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -12,7 +13,9 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.bankathon.voxisapp.apis.AwsApiClient;
+import com.bankathon.voxisapp.apis.request.AuthenticateVoiceRequest;
 import com.bankathon.voxisapp.apis.response.Response;
+import com.bankathon.voxisapp.apis.response.VoiceAuthenticateStatus;
 import com.bankathon.voxisapp.util.AudioUtils;
 import com.bankathon.voxisapp.util.TTSUtil;
 
@@ -128,15 +131,33 @@ public class CaptchaActivity extends AppCompatActivity {
         // while interacting with the UI.
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
         final String captchaString = getCaptcha();
-        //TTSUtil ttsUtil = new TTSUtil();
+
         AudioUtils.textToSpeech("Please repeat to login " + captchaString);
 
-        String inputFromUser = AudioUtils.speechToText();
-
-        if (inputFromUser != null) {
-            AudioUtils.textToSpeech(inputFromUser);
+        String inputFromUser = "";
+        while (true) {
+            inputFromUser = AudioUtils.speechToText();
+            if (inputFromUser != null) {
+                //AudioUtils.textToSpeech(inputFromUser);
+                if (!inputFromUser.equalsIgnoreCase(captchaString)) {
+                    AudioUtils.textToSpeech("Wrong Input");
+                } else {
+                    break;
+                }
+            } else {
+                AudioUtils.textToSpeech("No Input Try again");
+            }
+        }
+        VoiceAuthenticateStatus status = authenticateVoice(inputFromUser, captchaString);
+        if (status.equals(VoiceAuthenticateStatus.ACCEPTED)) {
+            Intent i = new Intent(this.getApplicationContext(), BankActivity.class);
+            startActivity(i);
+            finish();
         } else {
-            AudioUtils.textToSpeech("Not input found");
+            AudioUtils.textToSpeech("Authentication is unsuccessful, Try Again");
+            Intent i = new Intent(this.getApplicationContext(), CaptchaActivity.class);
+            startActivity(i);
+            finish();
         }
     }
 
@@ -147,6 +168,32 @@ public class CaptchaActivity extends AppCompatActivity {
                     AwsApiClient.getInstance().getMyApi().generateCaptcha("2345343234");
             try {
                 response.set((String) generateCaptcha.execute().body().getBody());
+            } catch (IOException e) {
+                Log.i(e.toString(), "");
+            }
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            Log.i(e.toString(), "");
+        }
+        return response.get();
+    }
+
+    private VoiceAuthenticateStatus authenticateVoice(String inputFromUser, String captchaString) {
+        AtomicReference<VoiceAuthenticateStatus> response = new AtomicReference<>();
+        Thread thread = new Thread(() -> {
+            AuthenticateVoiceRequest request = new AuthenticateVoiceRequest();
+            request.setCaptcha(captchaString);
+            request.setMobileNumber("2345343234");
+            request.setBase64EncodeSpeech(inputFromUser);
+
+            Call<Response> generateCaptcha =
+                    AwsApiClient.getInstance().getMyApi().authenticateVoice(request);
+            try {
+
+                response.set((VoiceAuthenticateStatus) generateCaptcha.execute().body().getBody());
             } catch (IOException e) {
                 Log.i(e.toString(), "");
             }
