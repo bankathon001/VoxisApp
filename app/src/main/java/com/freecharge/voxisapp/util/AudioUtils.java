@@ -2,22 +2,13 @@ package com.freecharge.voxisapp.util;
 
 import android.content.Context;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Environment;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.file.Files;
-import java.util.Locale;
 
 public class AudioUtils {
     private MediaPlayer mediaPlayer = new MediaPlayer();
@@ -25,7 +16,7 @@ public class AudioUtils {
     public static void convertBytesToFile(byte[] bytearray, Context context) {
 
         //listPath();
-        bytearray = getByteArrayFromAudio(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download/st.wav");
+        bytearray = getByteArrayFromAudio(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/st.wav");
         try {
             //File outputFile = File.createTempFile("", "mp3", getCacheDir(context));
             FileOutputStream fos = new FileOutputStream(getCacheDir(context));
@@ -74,9 +65,8 @@ public class AudioUtils {
         Log.d("Files", "Path: " + path);
         File f = new File(path);
         File file[] = f.listFiles();
-        Log.d("Files", "Size: "+ file.length);
-        for (int i=0; i < file.length; i++)
-        {
+        Log.d("Files", "Size: " + file.length);
+        for (int i = 0; i < file.length; i++) {
             Log.d("Files", "FileName:" + file[i].getName());
         }
     }
@@ -102,7 +92,7 @@ public class AudioUtils {
             storageDir.mkdirs();
             // This should never happen - log handled exception!
         }
-        return new File(path + "aud-" + System.currentTimeMillis() + ".wav");
+        return new File(path + "/aud-" + System.currentTimeMillis() + ".wav");
     }
 
 
