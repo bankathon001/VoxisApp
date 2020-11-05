@@ -39,35 +39,27 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        showImage();
         //This method is used so that your splash activity
         //can cover the entire screen.
-        myTTS = new TextToSpeech(this,  this::onInit);
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                showImage();
-                final boolean[] jackIn = new boolean[10];
-                jackIn[0] = getAudioDevicesStatus();
-                if(jackIn[0]) {
-                    logger.info( "redirecting to Login Just After Opening");
-                    redirectIfJackConnected(jackIn[0]);
-                }
-                sayText();
-                while(!jackIn[0]) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            sayText();
-                            // Do something after 5s = 5000ms
-                            logger.info( "Checked if Jack Plugged in or Not");
-                            jackIn[0] = getAudioDevicesStatus();
-                        }
-                    }, 10000);
-                }
-                logger.info( "redirecting to Login");
-                redirectIfJackConnected(jackIn[0]);
+        //myTTS = new TextToSpeech(this,  this::onInit);
+        boolean jackIn = getAudioDevicesStatus();
+        if(jackIn) {
+            logger.info( "redirecting to Login Just After Opening");
+            redirectIfJackConnected(jackIn);
+        }
+        sayText();
+        while(!jackIn) {
+            logger.info( "Checked if Jack Plugged in or Not");
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        });
+            jackIn = getAudioDevicesStatus();
+        }
+        logger.info( "redirecting to Login");
+        redirectIfJackConnected(jackIn);
     }
 
     private boolean getAudioDevicesStatus() {
