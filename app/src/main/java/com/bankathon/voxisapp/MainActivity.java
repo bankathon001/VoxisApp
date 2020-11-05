@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.bankathon.voxisapp.ui.login.LoginActivity;
 
+import java.lang.reflect.Array;
 import java.util.Locale;
 import java.util.logging.Logger;
 
@@ -45,7 +46,8 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             @Override
             public void run() {
                 showImage();
-                final boolean[] jackIn = {getAudioDevicesStatus()};
+                final boolean[] jackIn = new boolean[10];
+                jackIn[0] = getAudioDevicesStatus();
                 if(jackIn[0]) {
                     logger.info( "redirecting to Login Just After Opening");
                     redirectIfJackConnected(jackIn[0]);
