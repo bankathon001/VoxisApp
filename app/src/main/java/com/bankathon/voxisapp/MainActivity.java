@@ -44,27 +44,27 @@ public class MainActivity extends AppCompatActivity {
         final boolean[] jackIn = {getAudioDevicesStatus()};
         if(jackIn[0]) {
             redirectIfJackConnected(jackIn[0]);
-        } else {
-            while(!jackIn[0]) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Do something after 5s = 5000ms
-                        TextToSpeech myTTS= null;
-                        TextToSpeech finalMyTTS = myTTS;
-                        myTTS = new TextToSpeech(getApplicationContext(),  new TextToSpeech.OnInitListener() {
-                            @Override
-                            public void onInit(int status) {
-                                if(status != TextToSpeech.ERROR) {
-                                    finalMyTTS.setLanguage(Locale.UK);
-                                }
-                            }});
-                        myTTS.speak("Please Connect HeadPhoneJack", TextToSpeech.QUEUE_FLUSH, null);
-                       jackIn[0] = getAudioDevicesStatus();
-                    }
-                }, 10000);
-            }
         }
+        while(!jackIn[0]) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // Do something after 5s = 5000ms
+                    TextToSpeech myTTS= null;
+                    TextToSpeech finalMyTTS = myTTS;
+                    myTTS = new TextToSpeech(getApplicationContext(),  new TextToSpeech.OnInitListener() {
+                        @Override
+                        public void onInit(int status) {
+                            if(status != TextToSpeech.ERROR) {
+                                finalMyTTS.setLanguage(Locale.UK);
+                            }
+                        }});
+                    myTTS.speak("Please Connect HeadPhoneJack", TextToSpeech.QUEUE_FLUSH, null);
+                   jackIn[0] = getAudioDevicesStatus();
+                }
+            }, 10000);
+        }
+        redirectIfJackConnected(jackIn[0]);
     }
 
     private boolean getAudioDevicesStatus() {
