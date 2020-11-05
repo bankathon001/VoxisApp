@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioDeviceInfo;
@@ -25,7 +26,7 @@ import retrofit2.Call;
 
 import static android.Manifest.permission.INTERNET;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     private final Logger logger = Logger.getLogger(MainActivity.class.getName());
 
@@ -38,9 +39,8 @@ public class MainActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{INTERNET}, 10);
 
         AudioUtils.textToSpeech("Welcome to Voxis Voice Banking Application");
-
         boolean jackIn = getAudioDevicesStatus();
-        if(jackIn) {
+        if(true) {
             logger.info( "redirecting to Login Just After Opening");
             try {
                 redirectIfJackConnected(true);
@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+
 
     private boolean getAudioDevicesStatus() {
         //this.recreate();

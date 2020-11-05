@@ -1,5 +1,6 @@
 package com.bankathon.voxisapp.util;
 
+import android.app.Activity;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
@@ -11,7 +12,7 @@ public class TTSUtil {
 
     TextToSpeech tts;
 
-    public void textToSpeech(String text, AppCompatActivity appCompatActivity) {
+    public void textToSpeech(String text, Activity appCompatActivity) {
         tts = new TextToSpeech(appCompatActivity.getApplicationContext(), status -> {
             if(status != TextToSpeech.ERROR) {
                 tts.setLanguage(Locale.UK);
