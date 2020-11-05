@@ -3,6 +3,7 @@ package com.bankathon.voxisapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
@@ -16,22 +17,31 @@ import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bankathon.voxisapp.ui.login.LoginActivity;
 
 import java.util.Locale;
+import java.util.logging.Logger;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
+
+    private final Logger logger = Logger.getLogger(MainActivity.class.getName());
+
+    // TTS object
+    private TextToSpeech myTTS;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        myTTS = new TextToSpeech(this,  this::onInit);
         setContentView(R.layout.activity_main);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         //This method is used so that your splash activity
         //can cover the entire screen.
         setContentView(R.layout.activity_main);
+
         //this will bind your MainActivity.class file with activity_main.
         ImageView image = (ImageView) findViewById(R.id.imageView);
         Animation animation = new AlphaAnimation(1, 0); //to change visibility from visible to invisible
@@ -43,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
         final boolean[] jackIn = {getAudioDevicesStatus()};
         if(jackIn[0]) {
+            logger.info( "redirecting to Login Just After Opening");
             redirectIfJackConnected(jackIn[0]);
         }
         while(!jackIn[0]) {
@@ -52,10 +63,12 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
                     // Do something after 5s = 5000ms
                     sayText();
+                    logger.info( "Checked if Jack Plugged in or Not");
                    jackIn[0] = getAudioDevicesStatus();
                 }
             }, 10000);
         }
+        logger.info( "redirecting to Login");
         redirectIfJackConnected(jackIn[0]);
     }
 
@@ -72,15 +85,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sayText() {
-        TextToSpeech myTTS= null;
-        TextToSpeech finalMyTTS = myTTS;
-        myTTS = new TextToSpeech(getApplicationContext(),  new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if(status != TextToSpeech.ERROR) {
-                    finalMyTTS.setLanguage(Locale.UK);
-                }
-            }});
+        logger.info( "text to speech init");
         myTTS.speak("Please Connect HeadPhoneJack", TextToSpeech.QUEUE_FLUSH, null);
     }
 
@@ -94,6 +99,22 @@ public class MainActivity extends AppCompatActivity {
             //invoke the SecondActivity.
 
             finish();
+        }
+    }
+
+    @Override
+    public void onInit(int initStatus) {
+        // check for successful instantiation
+        if (initStatus == TextToSpeech.SUCCESS) {
+            logger.info("TTS Success");
+            if (myTTS.isLanguageAvailable(Locale.US) == TextToSpeech.LANG_AVAILABLE) {
+                myTTS.setLanguage(Locale.US);
+                this.getIntent().setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+            }
+        } else if (initStatus == TextToSpeech.ERROR) {
+            logger.info("TTS Failed");
+            Toast.makeText(this, "Sorry! Text To Speech failed...",
+                    Toast.LENGTH_LONG).show();
         }
     }
 }
