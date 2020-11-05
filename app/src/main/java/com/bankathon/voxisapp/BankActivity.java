@@ -12,15 +12,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bankathon.voxisapp.apis.AwsApiClient;
 import com.bankathon.voxisapp.apis.request.ValidatePinRequest;
 import com.bankathon.voxisapp.apis.response.GetBalanceResponse;
+import com.bankathon.voxisapp.apis.response.Response;
 import com.bankathon.voxisapp.apis.response.ValidatePinStatus;
 import com.bankathon.voxisapp.util.AudioUtils;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 
 public class BankActivity extends AppCompatActivity {
     TextView textView;
@@ -46,7 +47,41 @@ public class BankActivity extends AppCompatActivity {
         } else if (input.toLowerCase().contains("balance")) {
             GetBalanceResponse response = fetchBalance();
             AudioUtils.textToSpeech("Your account balance is " + response.getBalance());
+        } else if (input.toLowerCase().contains("last") && input.toLowerCase().contains("transactions")) {
+            List<String> list = fetchLast5Transactions();
+            list.stream().forEach(item -> {
+                AudioUtils.textToSpeech(item);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Log.e(e.toString(), null);
+                }
+            });
+        } else if (input.toLowerCase().contains("credit")) {
+            AudioUtils.textToSpeech("Your account balance is " + "Rs 2000");
         }
+    }
+
+    private List<String> fetchLast5Transactions() {
+        AtomicReference<List<String>> response = new AtomicReference<>();
+        Thread thread = new Thread(() -> {
+            Call<Response>  last5txn  =
+                   AwsApiClient.getInstance().getMyApi().last5txn("9582340663");
+            try {
+
+                response.set((List<String>) last5txn.execute().body());
+            } catch (IOException e) {
+                Log.i(e.toString(), "");
+            }
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            Log.i(e.toString(), "");
+        }
+        return response.get();
+
     }
 
     private GetBalanceResponse fetchBalance() {

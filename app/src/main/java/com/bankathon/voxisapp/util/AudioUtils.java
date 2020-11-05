@@ -116,7 +116,6 @@ public class AudioUtils {
             assert (speechConfig != null);
 
             SpeechSynthesizer synthesizer = new SpeechSynthesizer(speechConfig);
-
             // Note: this will block the UI thread, so eventually, you want to register for the event
             SpeechSynthesisResult result = synthesizer.SpeakText(text);
             assert (result != null);
