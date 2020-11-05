@@ -5,5 +5,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/voxis"
     android:theme="@style/ThemeOverlay.VoxisApp.FullscreenContainer"
+    android:id="@+id/frame_layout"
     tools:context=".CaptchaActivity">
 </FrameLayout>

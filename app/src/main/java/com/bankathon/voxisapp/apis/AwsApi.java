@@ -2,6 +2,7 @@ package com.bankathon.voxisapp.apis;
 
 import com.bankathon.voxisapp.apis.request.AuthenticateVoiceRequest;
 import com.bankathon.voxisapp.apis.request.RegisteredVoiceRequest;
+import com.bankathon.voxisapp.apis.request.ValidatePinRequest;
 import com.bankathon.voxisapp.apis.response.GetBalanceResponse;
 import com.bankathon.voxisapp.apis.response.RegisterCheck;
 import com.bankathon.voxisapp.apis.response.Response;
@@ -30,6 +31,9 @@ public interface AwsApi {
 
     @POST("register-voice")
     Call<Response> registerVoice(@Body RegisteredVoiceRequest registeredVoiceRequest);
+
+    @POST("validate-pin")
+    Call<Response> validateDebitCardPin(@Body ValidatePinRequest validatePinRequest);
 
     @GET("generate-capta")
     Call<Response> generateCaptcha(@Query("mobileNumber") String mobileNumber);

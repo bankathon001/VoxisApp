@@ -1,54 +1,70 @@
 package com.bankathon.voxisapp;
 
-import android.Manifest;
 import android.app.Activity;
-import android.content.pm.PackageManager;
-import android.media.MediaRecorder;
-import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
-import android.speech.SpeechRecognizer;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import com.bankathon.voxisapp.apis.AwsApiClient;
+import com.bankathon.voxisapp.apis.request.RegisteredVoiceRequest;
+import com.bankathon.voxisapp.apis.response.RegisteredVoiceStatus;
+import com.bankathon.voxisapp.apis.response.Response;
+import com.bankathon.voxisapp.util.AudioUtils;
+
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicReference;
+
+import retrofit2.Call;
 
 public class VoiceActivity extends Activity {
-    public static final Integer RecordAudioRequestCode = 1;
-    private SpeechRecognizer speechRecognizer;
-    private EditText editText;
-    private ImageView micButton;
-
-    private String fileName;
-    private MediaRecorder recorder;
-
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_voice);
+        setContentView(R.layout.activity_captcha);
+
+        AudioUtils.textToSpeech("App is not register with any voice sample, Initiating the registration process");
+
+        AudioUtils.textToSpeech("Please Input your voice sample");
+
+        String inputFromUser = AudioUtils.speechToText();
 
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-            checkPermission();
-        }
-
-    }
-
-
-    private void checkPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, RecordAudioRequestCode);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == RecordAudioRequestCode && grantResults.length > 0) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+        RegisteredVoiceStatus status = registerVoice(inputFromUser);
+        if (status.equals(RegisteredVoiceStatus.REGISTERED)) {
+            Intent i = new Intent(this.getApplicationContext(), RegistrationActivity.class);
+            startActivity(i);
+            finish();
+        } else {
+            AudioUtils.textToSpeech("Registration is unsuccessful, Try Again");
+            Intent i = new Intent(this.getApplicationContext(), VoiceActivity.class);
+            startActivity(i);
+            finish();
         }
     }
+
+    private RegisteredVoiceStatus registerVoice(String inputFromUser) {
+        AtomicReference<RegisteredVoiceStatus> response = new AtomicReference<>();
+        Thread thread = new Thread(() -> {
+            RegisteredVoiceRequest request = new RegisteredVoiceRequest();
+            request.setMobileNumber("2345343234");
+            request.setBase64EncodeSpeech(inputFromUser);
+
+            Call<Response> generateCaptcha =
+                    AwsApiClient.getInstance().getMyApi().registerVoice(request);
+            try {
+
+                response.set((RegisteredVoiceStatus) generateCaptcha.execute().body().getBody());
+            } catch (IOException e) {
+                Log.i(e.toString(), "");
+            }
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            Log.i(e.toString(), "");
+        }
+        return response.get();
+    }
+
 }
