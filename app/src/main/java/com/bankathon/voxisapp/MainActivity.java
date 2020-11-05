@@ -46,22 +46,22 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         //can cover the entire screen.
         //myTTS = new TextToSpeech(this,  this::onInit);
         boolean jackIn = getAudioDevicesStatus();
-        if(PLUGGEG_FLAG) {
+        if(jackIn) {
             logger.info( "redirecting to Login Just After Opening");
-            redirectIfJackConnected(PLUGGEG_FLAG);
+            redirectIfJackConnected(jackIn);
         }
-        //sayText();
-        while(!PLUGGEG_FLAG) {
+        sayText();
+        while(!jackIn) {
             logger.info( "Checked if Jack Plugged in or Not");
             try {
                 Thread.sleep(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            //jackIn = getAudioDevicesStatus();
+            jackIn = getAudioDevicesStatus();
         }
         logger.info( "redirecting to Login");
-        redirectIfJackConnected(PLUGGEG_FLAG);
+        redirectIfJackConnected(jackIn);
     }
 
     private boolean getAudioDevicesStatus() {
