@@ -5,8 +5,12 @@ import android.media.MediaPlayer;
 import android.os.Environment;
 import android.util.Log;
 
+import com.microsoft.cognitiveservices.speech.CancellationDetails;
+import com.microsoft.cognitiveservices.speech.CancellationReason;
 import com.microsoft.cognitiveservices.speech.ResultReason;
 import com.microsoft.cognitiveservices.speech.SpeechConfig;
+import com.microsoft.cognitiveservices.speech.SpeechRecognitionResult;
+import com.microsoft.cognitiveservices.speech.SpeechRecognizer;
 import com.microsoft.cognitiveservices.speech.SpeechSynthesisCancellationDetails;
 import com.microsoft.cognitiveservices.speech.SpeechSynthesisResult;
 import com.microsoft.cognitiveservices.speech.SpeechSynthesizer;
@@ -15,6 +19,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class AudioUtils {
     private MediaPlayer mediaPlayer = new MediaPlayer();
@@ -100,13 +106,13 @@ public class AudioUtils {
 
     static String speechSubscriptionKey = "e204c71506fd4bfd8a1a1f861088a35c";
     static String serviceRegion = "eastus";
+    static SpeechConfig speechConfig = SpeechConfig.fromSubscription(speechSubscriptionKey, serviceRegion);
 
     public static void textToSpeech(String text) {
         //TextView outputMessage = this.findViewById(R.id.outputMessage);
         //EditText speakText = this.findViewById(R.id.speakText);
 
         try {
-            SpeechConfig speechConfig = SpeechConfig.fromSubscription(speechSubscriptionKey, serviceRegion);
             assert (speechConfig != null);
 
             SpeechSynthesizer synthesizer = new SpeechSynthesizer(speechConfig);
@@ -114,6 +120,7 @@ public class AudioUtils {
             // Note: this will block the UI thread, so eventually, you want to register for the event
             SpeechSynthesisResult result = synthesizer.SpeakText(text);
             assert (result != null);
+
 
             if (result.getReason() == ResultReason.SynthesizingAudioCompleted) {
                 //outputMessage.setText("Speech synthesis succeeded.");
@@ -130,6 +137,45 @@ public class AudioUtils {
             Log.e("SpeechSDKDemo", "unexpected " + ex.getMessage());
             //assert(false);
         }
+    }
+
+    public static String speechToText() {
+        SpeechRecognizer recognizer = new SpeechRecognizer(speechConfig);
+        // Starts recognizing.
+        System.out.println("Say something...");
+
+        // Starts recognition. It returns when the first utterance has been recognized.
+        SpeechRecognitionResult result = null;
+        try {
+            result = recognizer.recognizeOnceAsync().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return null;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        // Checks result.
+        if (result.getReason() == ResultReason.RecognizedSpeech) {
+
+            System.out.println("RECOGNIZED: Text=" + result.getText());
+            return result.getText();
+        } else if (result.getReason() == ResultReason.NoMatch) {
+            System.out.println("NOMATCH: Speech could not be recognized.");
+        } else if (result.getReason() == ResultReason.Canceled) {
+            CancellationDetails cancellation = CancellationDetails.fromResult(result);
+            System.out.println("CANCELED: Reason=" + cancellation.getReason());
+
+            if (cancellation.getReason() == CancellationReason.Error) {
+                System.out.println("CANCELED: ErrorCode=" + cancellation.getErrorCode());
+                System.out.println("CANCELED: ErrorDetails=" + cancellation.getErrorDetails());
+                System.out.println("CANCELED: Did you update the subscription info?");
+            }
+        }
+
+        result.close();
+        return null;
     }
 
 }

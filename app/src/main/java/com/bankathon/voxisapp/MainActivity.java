@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         AudioUtils.textToSpeech("Welcome to Voxis Voice Banking Application");
 
-        boolean jackIn =true;// getAudioDevicesStatus();
+        boolean jackIn = getAudioDevicesStatus();
         if(jackIn) {
             logger.info( "redirecting to Login Just After Opening");
             try {
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             while (!jackIn) {
-                //ttsUtil.textToSpeech("Please Connect Headset to Continue", this);
+                AudioUtils.textToSpeech("Please Connect Headset to Continue");
                 logger.info("Checked if Jack Plugged in or Not");
                 try {
                     Thread.sleep(10000);
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean getAudioDevicesStatus() {
-        this.recreate();
+        //this.recreate();
         AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         AudioDeviceInfo[] audioDevices = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
         for(AudioDeviceInfo deviceInfo : audioDevices){
@@ -96,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
             });
             thread.start();
             thread.join();
+
+            /// Check if registered
             if(flag.get()) {
                 Intent i = new Intent(this.getApplicationContext(),
                         CaptchaActivity.class);

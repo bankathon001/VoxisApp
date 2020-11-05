@@ -13,6 +13,7 @@ import android.view.View;
 
 import com.bankathon.voxisapp.apis.AwsApiClient;
 import com.bankathon.voxisapp.apis.response.Response;
+import com.bankathon.voxisapp.util.AudioUtils;
 import com.bankathon.voxisapp.util.TTSUtil;
 
 import java.io.IOException;
@@ -127,19 +128,27 @@ public class CaptchaActivity extends AppCompatActivity {
         // while interacting with the UI.
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
         final String captchaString = getCaptcha();
-        TTSUtil ttsUtil = new TTSUtil();
-        ttsUtil.textToSpeech(captchaString, this);
+        //TTSUtil ttsUtil = new TTSUtil();
+        AudioUtils.textToSpeech("Please repeat to login " + captchaString);
+
+        String inputFromUser = AudioUtils.speechToText();
+
+        if (inputFromUser != null) {
+            AudioUtils.textToSpeech(inputFromUser);
+        } else {
+            AudioUtils.textToSpeech("Not input found");
+        }
     }
 
     private String getCaptcha() {
         AtomicReference<String> response = new AtomicReference<>("");
         Thread thread = new Thread(() -> {
             Call<Response> generateCaptcha =
-                    AwsApiClient.getInstance().getMyApi().generateCaptcha("abc");
+                    AwsApiClient.getInstance().getMyApi().generateCaptcha("2345343234");
             try {
                 response.set((String) generateCaptcha.execute().body().getBody());
             } catch (IOException e) {
-               Log.i(e.toString(),"");
+                Log.i(e.toString(), "");
             }
         });
         thread.start();

@@ -50,62 +50,6 @@ public class VoiceActivity extends AppCompatActivity {
             checkPermission();
         }
 
-        editText = findViewById(R.id.text_voice);
-        micButton = findViewById(R.id.iv_mic);
-
-        micButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startRecording();
-            }
-        });
-
-        ImageView stopRecordingButton = findViewById(R.id.iv_mic_1);
-        stopRecordingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                stopRecording();
-            }
-        });
-
-    }
-
-    private void startRecording() {
-        String uuid = UUID.randomUUID().toString();
-        fileName = getCacheDir1();
-        Log.i(MainActivity.class.getSimpleName(), fileName);
-
-        recorder = new MediaRecorder();
-        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        recorder.setOutputFile(fileName);
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-
-        try {
-            recorder.prepare();
-            recorder.start();
-        } catch (IOException e) {
-            Log.e(MainActivity.class.getSimpleName() + ":startRecording()", "prepare() failed");
-        }
-
-    }
-
-    private void stopRecording() {
-        if (recorder != null) {
-            recorder.release();
-            recorder = null;
-        }
-    }
-
-
-    public String getCacheDir1() {
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/voxisDir";
-        File storageDir = new File(path);
-        if (!storageDir.exists()) {
-            storageDir.mkdirs();
-            // This should never happen - log handled exception!
-        }
-        return path + "/aud-" + System.currentTimeMillis() + ".wav";
     }
 
 
