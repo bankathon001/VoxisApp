@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private boolean getAudioDevicesStatus() {
         this.recreate();
         AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-        AudioDeviceInfo[] audioDevices = audioManager.getDevices(AudioManager.GET_DEVICES_ALL);
+        AudioDeviceInfo[] audioDevices = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
         for(AudioDeviceInfo deviceInfo : audioDevices){
             if(deviceInfo.getType()==AudioDeviceInfo.TYPE_WIRED_HEADPHONES
                     || deviceInfo.getType()==AudioDeviceInfo.TYPE_WIRED_HEADSET){

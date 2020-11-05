@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.bankathon.voxisapp.R;
 import com.bankathon.voxisapp.util.AudioUtils;
 
 import java.util.Locale;
@@ -27,7 +26,7 @@ public class TtsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_2);
+        setContentView(R.layout.activity_tts);
         Button button = findViewById(R.id.button_act);
         Button buttonSpeech = findViewById(R.id.button_speech);
 
