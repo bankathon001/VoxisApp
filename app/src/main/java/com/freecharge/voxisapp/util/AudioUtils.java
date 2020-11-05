@@ -11,8 +11,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.Locale;
 
 public class AudioUtils {
@@ -78,17 +80,24 @@ public class AudioUtils {
     }
 
     public static byte[] getByteArrayFromAudio(String filePath) {
-        FileInputStream fis = null;
+        // Open file
         try {
-            fis = new FileInputStream(filePath);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            byte[] b = new byte[1024];
-            for (int readNum; (readNum = fis.read(b)) != -1; ) {
-                bos.write(b, 0, readNum);
-            }
-            return bos.toByteArray();
-        } catch (Exception e) {
-            Log.d("mylog", e.toString());
+            RandomAccessFile f = new RandomAccessFile(filePath, "r");
+            // Get and check length
+            long longlength = f.length();
+            int length = (int) longlength;
+            if (length != longlength)
+                throw new IOException("File size >= 2 GB");
+            // Read file and return data
+            byte[] data = new byte[length];
+            f.readFully(data);
+            f.close();
+            return data;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
         }
         return null;
     }
