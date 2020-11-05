@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Button button = findViewById(R.id.button_act);
         Button buttonSpeech = findViewById(R.id.button_speech);
+
         et = findViewById(R.id.edit_text_speech);
         tts = new TextToSpeech(MainActivity.this, new TextToSpeech.OnInitListener() {
 
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         buttonSpeech.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                ConvertTextToSpeech();
             }
         });
 
@@ -74,8 +75,10 @@ public class MainActivity extends AppCompatActivity {
         if ("".equals(text)) {
             text = "Content not available";
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
-        } else
+        } else {
             tts.speak(text + " is saved", TextToSpeech.QUEUE_FLUSH, null);
+            et.setText("");
+        }
     }
 
     public static class OnSwipeTouchListener implements View.OnTouchListener {
