@@ -1,6 +1,7 @@
 package com.bankathon.voxisapp;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import retrofit2.Response;
 
 public class TestActivity extends AppCompatActivity {
     TextView textView;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +47,7 @@ public class TestActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<GetBalanceResponse> call, Throwable t) {
                 textView.setText("failed to fetch");
-
+                Log.e("error", "error is : " + t.getMessage());
             }
         });
 
