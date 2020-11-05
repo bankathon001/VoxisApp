@@ -70,7 +70,7 @@ public class VoiceActivity extends AppCompatActivity {
 
     }
 
-    private void stopRecording() {
+    private void startRecording() {
         String uuid = UUID.randomUUID().toString();
         fileName = getCacheDir1();
         Log.i(MainActivity.class.getSimpleName(), fileName);
@@ -90,7 +90,7 @@ public class VoiceActivity extends AppCompatActivity {
         recorder.start();
     }
 
-    private void startRecording() {
+    private void stopRecording() {
         if (recorder != null) {
             recorder.release();
             recorder = null;
