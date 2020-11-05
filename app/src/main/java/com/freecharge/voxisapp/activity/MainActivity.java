@@ -1,11 +1,10 @@
-package com.freecharge.voxisapp;
+package com.freecharge.voxisapp.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.widget.Toast;
 
 import com.freecharge.voxisapp.R;
 import com.freecharge.voxisapp.digilink.DigitalInkMainActivity;
+import com.freecharge.voxisapp.util.AudioUtils;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -138,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
         void onSwipeLeft() {
             Toast.makeText(context, "Swiped Left", Toast.LENGTH_SHORT).show();
+            AudioUtils.convertBytesToFile(new byte[10], context);
             this.onSwipe.swipeLeft();
         }
 
