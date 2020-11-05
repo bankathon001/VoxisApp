@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.bankathon.voxisapp.R;
-import com.bankathon.voxisapp.digilink.DigitalInkMainActivity;
 import com.bankathon.voxisapp.util.AudioUtils;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,7 +30,7 @@ public class SwipeActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(SwipeActivity.this, DigitalInkMainActivity.class);
+                Intent myIntent = new Intent(SwipeActivity.this, VoiceActivity.class);
                 startActivity(myIntent);
             }
         });

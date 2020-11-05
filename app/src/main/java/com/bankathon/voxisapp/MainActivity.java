@@ -2,6 +2,7 @@ package com.bankathon.voxisapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -95,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         if (val) {
             TelephonyManager tMgr = (TelephonyManager)getApplication()
                     .getSystemService(Context.TELEPHONY_SERVICE);
-            String mPhoneNumber = tMgr.getLine1Number();
+            @SuppressLint("MissingPermission") String mPhoneNumber = tMgr.getLine1Number();
             check(mPhoneNumber);
             if(isRegistered) {
                 Intent i = new Intent(MainActivity.this,
