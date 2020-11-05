@@ -21,7 +21,7 @@
         <activity
 android:name=".ui.login.LoginActivity"
             android:label="@string/title_activity_login"></activity>
-        <activity android:name=".VoiceActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
