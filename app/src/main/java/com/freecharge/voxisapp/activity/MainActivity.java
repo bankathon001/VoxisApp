@@ -5,25 +5,59 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.freecharge.voxisapp.R;
 import com.freecharge.voxisapp.digilink.DigitalInkMainActivity;
 import com.freecharge.voxisapp.util.AudioUtils;
 
+import java.util.Locale;
+
 
 public class MainActivity extends AppCompatActivity {
     OnSwipeTouchListener onSwipeTouchListener;
+    TextToSpeech tts;
+    EditText et;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button button = findViewById(R.id.button_act);
+        Button buttonSpeech = findViewById(R.id.button_speech);
+        et = findViewById(R.id.edit_text_speech);
+        tts = new TextToSpeech(MainActivity.this, new TextToSpeech.OnInitListener() {
+
+            @Override
+            public void onInit(int status) {
+                // TODO Auto-generated method stub
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = tts.setLanguage(Locale.US);
+                    if (result == TextToSpeech.LANG_MISSING_DATA ||
+                            result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("error", "This Language is not supported");
+                    } else {
+                        ConvertTextToSpeech();
+                    }
+                } else
+                    Log.e("error", "Initilization Failed!");
+            }
+        });
+
+        buttonSpeech.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -32,6 +66,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         onSwipeTouchListener = new OnSwipeTouchListener(MainActivity.this, this, findViewById(R.id.relativeLayout));
+    }
+
+    private void ConvertTextToSpeech() {
+        // TODO Auto-generated method stub
+        String text = et.getText().toString();
+        if ("".equals(text)) {
+            text = "Content not available";
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+        } else
+            tts.speak(text + " is saved", TextToSpeech.QUEUE_FLUSH, null);
     }
 
     public static class OnSwipeTouchListener implements View.OnTouchListener {
