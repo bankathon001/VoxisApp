@@ -1,41 +1,83 @@
 package com.bankathon.voxisapp;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Context;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import com.bankathon.voxisapp.R;
 import com.bankathon.voxisapp.util.AudioUtils;
 
-public class SwipeActivity extends AppCompatActivity {
+import java.util.Locale;
+
+
+public class TtsActivity extends AppCompatActivity {
     OnSwipeTouchListener onSwipeTouchListener;
+    TextToSpeech tts;
+    EditText et;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_2);
         Button button = findViewById(R.id.button_act);
-        button.setOnClickListener(new View.OnClickListener() {
+        Button buttonSpeech = findViewById(R.id.button_speech);
+
+        et = findViewById(R.id.edit_text_speech);
+        tts = new TextToSpeech(TtsActivity.this, new TextToSpeech.OnInitListener() {
+
             @Override
-            public void onClick(View v) {
-                /*Intent myIntent = new Intent(SwipeActivity.this, DigitalInkMainActivity.class);
-                startActivity(myIntent);*/
+            public void onInit(int status) {
+                // TODO Auto-generated method stub
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = tts.setLanguage(Locale.US);
+                    if (result == TextToSpeech.LANG_MISSING_DATA ||
+                            result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("error", "This Language is not supported");
+                    } else {
+                        ConvertTextToSpeech();
+                    }
+                } else
+                    Log.e("error", "Initilization Failed!");
             }
         });
-        onSwipeTouchListener = new OnSwipeTouchListener(SwipeActivity.this, this, findViewById(R.id.relativeLayout));
+
+        buttonSpeech.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ConvertTextToSpeech();
+            }
+        });
+
+        onSwipeTouchListener = new OnSwipeTouchListener(TtsActivity.this, this, findViewById(R.id.relativeLayout));
+    }
+
+    private void ConvertTextToSpeech() {
+        // TODO Auto-generated method stub
+        String text = et.getText().toString();
+        if ("".equals(text)) {
+            text = "Content not available";
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+        } else {
+            tts.speak(text + " is saved", TextToSpeech.QUEUE_FLUSH, null);
+            et.setText("");
+        }
     }
 
     public static class OnSwipeTouchListener implements View.OnTouchListener {
         private final GestureDetector gestureDetector;
         Context context;
-        SwipeActivity mainActivity;
+        TtsActivity mainActivity;
 
-        OnSwipeTouchListener(SwipeActivity mainActivity, Context ctx, View mainView) {
+        OnSwipeTouchListener(TtsActivity mainActivity, Context ctx, View mainView) {
             gestureDetector = new GestureDetector(ctx, new GestureListener());
             mainView.setOnTouchListener(this);
             context = ctx;
@@ -70,6 +112,7 @@ public class SwipeActivity extends AppCompatActivity {
                 Toast.makeText(context, "on Double Tap", Toast.LENGTH_SHORT).show();
                 return super.onDoubleTap(e);
             }
+
             @Override
             public boolean onDoubleTapEvent(MotionEvent e) {
                 Toast.makeText(context, "on Double Tap Event", Toast.LENGTH_SHORT).show();
