@@ -39,7 +39,8 @@ public class CaptchaActivity extends Activity {
             inputFromUser = AudioUtils.speechToText();
             if (inputFromUser != null) {
                 //AudioUtils.textToSpeech(inputFromUser);
-                if (!inputFromUser.equalsIgnoreCase(captchaString)) {
+                int len = inputFromUser.length() > 2 ? inputFromUser.length() - 2 : inputFromUser.length();
+                if (!inputFromUser.substring(0, len).equalsIgnoreCase(captchaString.substring(0, len))) {
                     AudioUtils.textToSpeech("Wrong Input try again by saying " + captchaString);
                 } else {
                     break;
@@ -93,7 +94,7 @@ public class CaptchaActivity extends Activity {
                     AwsApiClient.getInstance().getMyApi().authenticateVoice(request);
             try {
 
-                response.set((VoiceAuthenticateStatus) generateCaptcha.execute().body().getBody());
+                response.set(VoiceAuthenticateStatus.valueOf((String)generateCaptcha.execute().body().getBody()));
             } catch (IOException e) {
                 Log.i(e.toString(), "");
             }

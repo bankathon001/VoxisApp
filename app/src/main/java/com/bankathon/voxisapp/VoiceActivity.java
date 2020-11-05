@@ -52,8 +52,7 @@ public class VoiceActivity extends Activity {
             Call<Response> generateCaptcha =
                     AwsApiClient.getInstance().getMyApi().registerVoice(request);
             try {
-
-                response.set((RegisteredVoiceStatus) generateCaptcha.execute().body().getBody());
+                response.set(RegisteredVoiceStatus.valueOf((String)generateCaptcha.execute().body().getBody()));
             } catch (IOException e) {
                 Log.i(e.toString(), "");
             }

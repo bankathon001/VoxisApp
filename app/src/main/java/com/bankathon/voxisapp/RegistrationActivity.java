@@ -62,7 +62,7 @@ public class RegistrationActivity extends Activity {
                     AwsApiClient.getInstance().getMyApi().validateDebitCardPin(request);
             try {
 
-                response.set((ValidatePinStatus) generateCaptcha.execute().body().getBody());
+                response.set(ValidatePinStatus.valueOf((String) generateCaptcha.execute().body().getBody()));
             } catch (IOException e) {
                 Log.i(e.toString(), "");
             }
