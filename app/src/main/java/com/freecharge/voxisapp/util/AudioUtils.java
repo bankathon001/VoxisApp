@@ -23,7 +23,7 @@ public class AudioUtils {
     public static void convertBytesToFile(byte[] bytearray, Context context) {
 
         //listPath();
-        bytearray = getByteArrayFromAudio(Environment.getDataDirectory()+"/Download/Filesample.wav");
+        bytearray = getByteArrayFromAudio(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download/st.wav");
         try {
             //File outputFile = File.createTempFile("", "mp3", getCacheDir(context));
             FileOutputStream fos = new FileOutputStream(getCacheDir(context));
