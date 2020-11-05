@@ -141,17 +141,19 @@ public class SwipeActivity extends AppCompatActivity {
 
         void onSwipeLeft() {
             Toast.makeText(context, "Swiped Left", Toast.LENGTH_SHORT).show();
-            AudioUtils.convertBytesToFile(new byte[10], context);
+            //AudioUtils.convertBytesToFile(new byte[10], context);
             this.onSwipe.swipeLeft();
         }
 
         void onSwipeTop() {
             Toast.makeText(context, "Swiped Up", Toast.LENGTH_SHORT).show();
+
             this.onSwipe.swipeTop();
         }
 
         void onSwipeBottom() {
             Toast.makeText(context, "Swiped Down", Toast.LENGTH_SHORT).show();
+
             this.onSwipe.swipeBottom();
         }
 
