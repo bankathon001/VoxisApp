@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -31,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.UUID;
 
-public class VoiceActivity extends AppCompatActivity {
+public class VoiceActivity extends Activity {
     public static final Integer RecordAudioRequestCode = 1;
     private SpeechRecognizer speechRecognizer;
     private EditText editText;

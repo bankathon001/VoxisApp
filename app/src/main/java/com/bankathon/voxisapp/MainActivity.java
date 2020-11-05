@@ -40,7 +40,7 @@ public class MainActivity extends Activity {
 
         AudioUtils.textToSpeech("Welcome to Voxis Voice Banking Application");
         boolean jackIn = getAudioDevicesStatus();
-        if(jackIn) {
+        if(true) {
             logger.info( "redirecting to Login Just After Opening");
             try {
                 redirectIfJackConnected(true);
