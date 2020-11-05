@@ -57,9 +57,6 @@ public class AudioUtils {
     }
 
     private static void listPath() {
-        Log.i("", "getStorageDirectory : " + Environment.getStorageDirectory().getAbsolutePath());
-        Log.i("", "getStorageDirectory : " + Environment.getDataDirectory().getAbsolutePath());
-        Log.i("", "getStorageDirectory : " + Environment.getRootDirectory().getAbsolutePath());
         String path = Environment.getExternalStorageDirectory().getAbsolutePath();
 
         Log.d("Files", "Path: " + path);
