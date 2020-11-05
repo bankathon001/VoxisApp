@@ -1,4 +1,4 @@
-package com.bankathon.voxis;
+package com.bankathon.voxisapp;
 
 import org.junit.Test;
 
