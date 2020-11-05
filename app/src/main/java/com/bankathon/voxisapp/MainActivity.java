@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean getAudioDevicesStatus() {
         this.recreate();
         AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-        AudioDeviceInfo[] audioDevices = audioManager.getDevices(AudioManager.GET_DEVICES_ALL);
+        AudioDeviceInfo[] audioDevices = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
         for(AudioDeviceInfo deviceInfo : audioDevices){
             if(deviceInfo.getType()==AudioDeviceInfo.TYPE_WIRED_HEADPHONES
                     || deviceInfo.getType()==AudioDeviceInfo.TYPE_WIRED_HEADSET){
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showImage() {
+/*    private void showImage() {
         //this will bind your MainActivity.class file with activity_main.
         ImageView image = (ImageView) findViewById(R.id.imageView);
         Animation animation = new AlphaAnimation(1, 0); //to change visibility from visible to invisible
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         animation.setRepeatCount(Animation.INFINITE); //repeating indefinitely
         animation.setRepeatMode(Animation.REVERSE); //animation will start from end point once ended.
         image.startAnimation(animation);
-    }
+    }*/
 /*
     @Override
     public void onInit(int initStatus) {
