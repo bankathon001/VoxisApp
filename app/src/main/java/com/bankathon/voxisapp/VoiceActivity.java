@@ -83,11 +83,11 @@ public class VoiceActivity extends AppCompatActivity {
 
         try {
             recorder.prepare();
+            recorder.start();
         } catch (IOException e) {
             Log.e(MainActivity.class.getSimpleName() + ":startRecording()", "prepare() failed");
         }
 
-        recorder.start();
     }
 
     private void stopRecording() {
