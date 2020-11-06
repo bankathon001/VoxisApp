@@ -189,7 +189,9 @@ public class RegistrationActivity extends AppCompatActivity {
             //Toast.makeText(context, "Swiped Right", Toast.LENGTH_SHORT).show();
             tapCountString.set(tapCountString.get() + AudioUtils.count);
             AudioUtils.count = 0;
-            AudioUtils.textToSpeech("please tap for next digit");
+            if (tapCountString.get().length() < 4) {
+                AudioUtils.textToSpeech("please tap for next digit");
+            }
             this.onSwipe.swipeRight();
         }
 

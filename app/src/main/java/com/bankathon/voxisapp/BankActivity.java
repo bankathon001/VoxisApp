@@ -35,15 +35,7 @@ public class BankActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bank);
-        textView = findViewById(R.id.tv_center);
-        Button button = findViewById(R.id.button_act);
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fetchBalance();
-            }
-        });
         int count = 0;
 
         while (true) {
