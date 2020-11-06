@@ -36,7 +36,11 @@ public class RegistrationActivity extends Activity {
 
         AudioUtils.textToSpeech("Input your debit card pin");
         AudioUtils.textToSpeech("Tap for digit and swipe right to confirm");
-
+        while (true) {
+            if (tapString.length() >= 4) {
+                break;
+            }
+        }
         ValidatePinStatus status = validateDebitCardDetail(tapString);
 
         if (status.equals(ValidatePinStatus.SUCCESS)) {
