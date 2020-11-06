@@ -38,9 +38,8 @@ public class RegistrationActivity extends AppCompatActivity {
         tapCount.set(0);
         onSwipeTouchListener = new OnSwipeTouchListener(this, findViewById(R.id.fl_register), tapString, tapCount);
 
-       /*AudioUtils.textToSpeech("Input your debit card pin");
+        AudioUtils.textToSpeech("Input your debit card pin");
         AudioUtils.textToSpeech("Tap for digit and swipe right to confirm");
-       */
         //doneJob();
     }
 
