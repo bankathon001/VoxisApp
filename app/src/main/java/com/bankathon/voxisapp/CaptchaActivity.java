@@ -76,7 +76,7 @@ public class CaptchaActivity extends Activity {
         AtomicReference<String> response = new AtomicReference<>("");
         Thread thread = new Thread(() -> {
             Call<Response> generateCaptcha =
-                    AwsApiClient.getInstance().getMyApi().generateCaptcha("9582340663");
+                    AwsApiClient.getInstance().getMyApi().generateCaptcha(AudioUtils.getMobileNumber());
             try {
                 response.set((String) generateCaptcha.execute().body().getBody());
             } catch (IOException e) {
@@ -97,7 +97,7 @@ public class CaptchaActivity extends Activity {
         Thread thread = new Thread(() -> {
             AuthenticateVoiceRequest request = new AuthenticateVoiceRequest();
             request.setCaptcha(captchaString);
-            request.setMobileNumber("9582340663");
+            request.setMobileNumber(AudioUtils.getMobileNumber());
             request.setBase64EncodeSpeech(inputFromUser);
 
             Call<Response> generateCaptcha =

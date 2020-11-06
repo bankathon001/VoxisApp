@@ -91,7 +91,7 @@ public class MainActivity extends Activity {
             AtomicBoolean flag = new AtomicBoolean(false);
             Thread thread = new Thread(() ->{
                 try {
-                   flag.set(check("9582340663"));
+                   flag.set(check(AudioUtils.getMobileNumber()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

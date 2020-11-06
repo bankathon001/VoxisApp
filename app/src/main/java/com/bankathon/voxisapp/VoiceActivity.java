@@ -46,7 +46,7 @@ public class VoiceActivity extends Activity {
         AtomicReference<RegisteredVoiceStatus> response = new AtomicReference<>();
         Thread thread = new Thread(() -> {
             RegisteredVoiceRequest request = new RegisteredVoiceRequest();
-            request.setMobileNumber("9582340663");
+            request.setMobileNumber(AudioUtils.getMobileNumber());
             request.setBase64EncodeSpeech(inputFromUser);
 
             Call<Response> generateCaptcha =

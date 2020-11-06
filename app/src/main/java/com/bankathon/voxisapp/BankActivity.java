@@ -82,7 +82,7 @@ public class BankActivity extends AppCompatActivity {
         AtomicReference<List<String>> response = new AtomicReference<>();
         Thread thread = new Thread(() -> {
             Call<Response> last5txn =
-                    AwsApiClient.getInstance().getMyApi().last5txn("9582340663");
+                    AwsApiClient.getInstance().getMyApi().last5txn(AudioUtils.getMobileNumber());
             try {
 
                 response.set((List<String>) last5txn.execute().body());
@@ -104,7 +104,7 @@ public class BankActivity extends AppCompatActivity {
         AtomicReference<GetBalanceResponse> response = new AtomicReference<>();
         Thread thread = new Thread(() -> {
             Call<GetBalanceResponse> generateCaptcha =
-                    AwsApiClient.getInstance().getMyApi().getUserBalanceByMobileNumber("9582340663");
+                    AwsApiClient.getInstance().getMyApi().getUserBalanceByMobileNumber(AudioUtils.getMobileNumber());
             try {
 
                 response.set(generateCaptcha.execute().body());
