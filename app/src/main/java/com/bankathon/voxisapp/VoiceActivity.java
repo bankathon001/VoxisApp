@@ -24,13 +24,22 @@ public class VoiceActivity extends Activity {
 
         AudioUtils.textToSpeech("App is not register with any voice sample, Initiating the registration process");
 
-        AudioUtils.textToSpeech("Please Input your voice sample");
+        int count = 0;
+        RegisteredVoiceStatus status = null;
+        AudioUtils.textToSpeech("Please say something to register");
+        String inputFromUser = "";
+        while (true) {
+            inputFromUser = AudioUtils.speechToText();
+            count++;
+            if (count < 3) {
+                AudioUtils.textToSpeech("That was good, please say again");
+            } else {
+                break;
+            }
+        }
 
-        String inputFromUser = AudioUtils.speechToText();
-
-
-        RegisteredVoiceStatus status = registerVoice(inputFromUser);
-        if (status.equals(RegisteredVoiceStatus.REGISTERED)) {
+        status = registerVoice(inputFromUser);
+        if (status == null || status.equals(RegisteredVoiceStatus.REGISTERED)) {
             Intent i = new Intent(this.getApplicationContext(), RegistrationActivity.class);
             startActivity(i);
             finish();
@@ -52,7 +61,7 @@ public class VoiceActivity extends Activity {
             Call<Response> generateCaptcha =
                     AwsApiClient.getInstance().getMyApi().registerVoice(request);
             try {
-                response.set(RegisteredVoiceStatus.valueOf((String)generateCaptcha.execute().body().getBody()));
+                response.set(RegisteredVoiceStatus.valueOf((String) generateCaptcha.execute().body().getBody()));
             } catch (IOException e) {
                 Log.i(e.toString(), "");
             }

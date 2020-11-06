@@ -1,5 +1,7 @@
 package com.bankathon.voxisapp;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +20,7 @@ import com.bankathon.voxisapp.util.AudioUtils;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
 import retrofit2.Call;
@@ -62,10 +65,14 @@ public class BankActivity extends AppCompatActivity {
                     }
                 });
             } else if (input.toLowerCase().contains("credit")) {
-                AudioUtils.textToSpeech("Your account balance is " + "Rs 2000");
+                AudioUtils.textToSpeech("Your current due is " + "Rs " + String.format("%04d", new Random().nextInt(10000)));
             } else if (input.toLowerCase().contains("exit")) {
                 AudioUtils.textToSpeech("Thank you for banking with voxis");
                 break;
+            } else if (input.toLowerCase().contains("customer") && input.toLowerCase().contains("call")) {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:9971971868"));
+                startActivity(callIntent);
             } else {
                 count++;
                 AudioUtils.textToSpeech("Unable to understand the output");
