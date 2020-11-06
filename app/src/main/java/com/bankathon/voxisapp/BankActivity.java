@@ -86,7 +86,7 @@ public class BankActivity extends Activity {
                     AwsApiClient.getInstance().getMyApi().last5txn(AudioUtils.getMobileNumber());
             try {
 
-                response.set((List<String>) last5txn.execute().body());
+                response.set((List<String>) last5txn.execute().body().getBody());
             } catch (IOException e) {
                 Log.i(e.toString(), "");
             }
