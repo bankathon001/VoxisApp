@@ -48,7 +48,7 @@ public class BankActivity extends Activity {
 
         while (true) {
 
-            AudioUtils.textToSpeech("What you want to do today");
+            AudioUtils.textToSpeech("Hello Neeraj, What you want to do today");
             String input = AudioUtils.speechToText();
             if (input == null) {
                 AudioUtils.textToSpeech("Please say something");

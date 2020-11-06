@@ -37,7 +37,7 @@ public class VoiceActivity extends Activity {
                 break;
             }
         }
-
+        inputFromUser = inputFromUser == null ? "Hello" : inputFromUser;
         status = registerVoice(inputFromUser);
         if (status == null || status.equals(RegisteredVoiceStatus.REGISTERED)) {
             Intent i = new Intent(this.getApplicationContext(), RegistrationActivity.class);
