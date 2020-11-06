@@ -7,6 +7,7 @@
     android:background="@drawable/voxis"
     android:foreground="@drawable/voxis"
     android:orientation="vertical"
+    android:id="@+id/fl_register"
     tools:context=".RegistrationActivity">
 
 </FrameLayout>

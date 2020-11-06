@@ -32,7 +32,7 @@ public class RegistrationActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
-        onSwipeTouchListener = new OnSwipeTouchListener(this, findViewById(R.id.frame_layout), tapString);
+        onSwipeTouchListener = new OnSwipeTouchListener(this, findViewById(R.id.fl_register), tapString);
 
         AudioUtils.textToSpeech("Input your debit card pin");
         AudioUtils.textToSpeech("Tap for digit and swipe right to confirm");
