@@ -48,7 +48,7 @@ public class BankActivity extends Activity {
             } else if (input.toLowerCase().contains("balance")) {
                 GetBalanceResponse response = fetchBalance();
                 AudioUtils.textToSpeech("Your account balance is " + response.getBalance());
-            } else if (input.toLowerCase().contains("last") && input.toLowerCase().contains("transactions")) {
+            } else if (input.toLowerCase().contains("last") || input.toLowerCase().contains("transactions")) {
                 List<String> list = fetchLast5Transactions();
                 list.stream().forEach(item -> {
                     AudioUtils.textToSpeech(item);
