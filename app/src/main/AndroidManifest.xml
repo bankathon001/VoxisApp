@@ -46,6 +46,9 @@
         <activity
             android:name=".RegistrationActivity"
             android:label="RegistrationActivity" />
+        <activity
+            android:name=".BankActivity"
+            android:label="BankActivity" />
     </application>
 
 </manifest>
