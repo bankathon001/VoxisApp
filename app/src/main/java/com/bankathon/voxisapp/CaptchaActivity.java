@@ -40,7 +40,7 @@ public class CaptchaActivity extends Activity {
             inputFromUser = AudioUtils.speechToText();
             if (inputFromUser != null) {
                 //AudioUtils.textToSpeech(inputFromUser);
-                int len = inputFromUser.length() > 2 ? inputFromUser.length() - 2 : inputFromUser.length();
+                int len = inputFromUser.length() > 2 ? inputFromUser.length() - 2 : inputFromUser.length()-1;
                 if (!inputFromUser.substring(0, len).equalsIgnoreCase(captchaString.substring(0, len))) {
                     count++;
                     AudioUtils.textToSpeech("Wrong Input try again by saying " + captchaString);
