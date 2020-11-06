@@ -1,5 +1,6 @@
 package com.bankathon.voxisapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,13 +27,14 @@ import java.util.concurrent.atomic.AtomicReference;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public class BankActivity extends AppCompatActivity {
+public class BankActivity extends Activity {
+
     TextView textView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_swipe);
+        setContentView(R.layout.activity_bank);
         textView = findViewById(R.id.tv_center);
         Button button = findViewById(R.id.button_act);
 

@@ -30,7 +30,7 @@ public class RegistrationActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_captcha);
+        setContentView(R.layout.activity_registration);
 
         onSwipeTouchListener = new OnSwipeTouchListener(this, findViewById(R.id.frame_layout), tapString);
 

@@ -15,6 +15,7 @@ import com.bankathon.voxisapp.apis.response.VoiceAuthenticateStatus;
 import com.bankathon.voxisapp.util.AudioUtils;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import retrofit2.Call;
@@ -103,8 +104,10 @@ public class CaptchaActivity extends Activity {
             Call<Response> generateCaptcha =
                     AwsApiClient.getInstance().getMyApi().authenticateVoice(request);
             try {
-
-                response.set(VoiceAuthenticateStatus.valueOf((String) generateCaptcha.execute().body().getBody()));
+                final Response response1 = generateCaptcha.execute().body();
+                if(Objects.nonNull(response1)) {
+                    response.set(VoiceAuthenticateStatus.valueOf((String) response1.getBody()));
+                }
             } catch (IOException e) {
                 Log.i(e.toString(), "");
             }
