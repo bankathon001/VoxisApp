@@ -39,34 +39,50 @@ public class BankActivity extends AppCompatActivity {
                 fetchBalance();
             }
         });
+        int count = 0;
 
-        AudioUtils.textToSpeech("What you want to do today");
-        String input = AudioUtils.speechToText();
-        if (input == null) {
+        while (true) {
 
-        } else if (input.toLowerCase().contains("balance")) {
-            GetBalanceResponse response = fetchBalance();
-            AudioUtils.textToSpeech("Your account balance is " + response.getBalance());
-        } else if (input.toLowerCase().contains("last") && input.toLowerCase().contains("transactions")) {
-            List<String> list = fetchLast5Transactions();
-            list.stream().forEach(item -> {
-                AudioUtils.textToSpeech(item);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    Log.e(e.toString(), null);
-                }
-            });
-        } else if (input.toLowerCase().contains("credit")) {
-            AudioUtils.textToSpeech("Your account balance is " + "Rs 2000");
+            AudioUtils.textToSpeech("What you want to do today");
+            String input = AudioUtils.speechToText();
+            if (input == null) {
+                AudioUtils.textToSpeech("Please say something");
+                count++;
+            } else if (input.toLowerCase().contains("balance")) {
+                GetBalanceResponse response = fetchBalance();
+                AudioUtils.textToSpeech("Your account balance is " + response.getBalance());
+            } else if (input.toLowerCase().contains("last") && input.toLowerCase().contains("transactions")) {
+                List<String> list = fetchLast5Transactions();
+                list.stream().forEach(item -> {
+                    AudioUtils.textToSpeech(item);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        Log.e(e.toString(), null);
+                    }
+                });
+            } else if (input.toLowerCase().contains("credit")) {
+                AudioUtils.textToSpeech("Your account balance is " + "Rs 2000");
+            } else if (input.toLowerCase().contains("exit")) {
+                AudioUtils.textToSpeech("Thank you for banking with voxis");
+                break;
+            } else {
+                count++;
+                AudioUtils.textToSpeech("Unable to understand the output");
+            }
+            if (count >= 3) {
+                AudioUtils.textToSpeech("Maximum number of attempt finished, Thank you for banking with voxis");
+                break;
+            }
         }
+        finishAndRemoveTask();
     }
 
     private List<String> fetchLast5Transactions() {
         AtomicReference<List<String>> response = new AtomicReference<>();
         Thread thread = new Thread(() -> {
-            Call<Response>  last5txn  =
-                   AwsApiClient.getInstance().getMyApi().last5txn("9582340663");
+            Call<Response> last5txn =
+                    AwsApiClient.getInstance().getMyApi().last5txn("9582340663");
             try {
 
                 response.set((List<String>) last5txn.execute().body());

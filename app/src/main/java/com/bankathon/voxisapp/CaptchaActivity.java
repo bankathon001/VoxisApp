@@ -34,6 +34,7 @@ public class CaptchaActivity extends Activity {
 
         AudioUtils.textToSpeech("Please repeat to login " + captchaString);
 
+        int count = 0;
         String inputFromUser = "";
         while (true) {
             inputFromUser = AudioUtils.speechToText();
@@ -41,13 +42,22 @@ public class CaptchaActivity extends Activity {
                 //AudioUtils.textToSpeech(inputFromUser);
                 int len = inputFromUser.length() > 2 ? inputFromUser.length() - 2 : inputFromUser.length();
                 if (!inputFromUser.substring(0, len).equalsIgnoreCase(captchaString.substring(0, len))) {
+                    count++;
                     AudioUtils.textToSpeech("Wrong Input try again by saying " + captchaString);
                 } else {
                     break;
                 }
             } else {
+                count++;
                 AudioUtils.textToSpeech("No Input Try again");
             }
+            if (count >= 3) {
+                AudioUtils.textToSpeech("Maximum number of attempt finished, Thank you for banking with voxis");
+                break;
+            }
+        }
+        if (count >= 3) {
+            finishAndRemoveTask();
         }
         VoiceAuthenticateStatus status = authenticateVoice(inputFromUser, captchaString);
         if (status.equals(VoiceAuthenticateStatus.ACCEPTED)) {
@@ -94,7 +104,7 @@ public class CaptchaActivity extends Activity {
                     AwsApiClient.getInstance().getMyApi().authenticateVoice(request);
             try {
 
-                response.set(VoiceAuthenticateStatus.valueOf((String)generateCaptcha.execute().body().getBody()));
+                response.set(VoiceAuthenticateStatus.valueOf((String) generateCaptcha.execute().body().getBody()));
             } catch (IOException e) {
                 Log.i(e.toString(), "");
             }
