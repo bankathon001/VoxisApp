@@ -53,7 +53,7 @@ public class BankActivity extends Activity {
                 list.stream().forEach(item -> {
                     AudioUtils.textToSpeech(item);
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(500);
                     } catch (InterruptedException e) {
                         Log.e(e.toString(), null);
                     }
