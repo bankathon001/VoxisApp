@@ -60,7 +60,7 @@ public class BankActivity extends Activity {
                 });
             } else if (input.toLowerCase().contains("credit")) {
                 AudioUtils.textToSpeech("Your current due is " + "Rs " + String.format("%04d", new Random().nextInt(10000)));
-            } else if (input.toLowerCase().contains("exit")) {
+            } else if (input.toLowerCase().contains("exit") || input.toLowerCase().contains("logout")) {
                 AudioUtils.textToSpeech("Thank you for banking with voxis");
                 break;
             } else if (input.toLowerCase().contains("customer") && input.toLowerCase().contains("call")) {
