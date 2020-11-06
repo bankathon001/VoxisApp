@@ -10,6 +10,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bankathon.voxisapp.apis.AwsApiClient;
 import com.bankathon.voxisapp.apis.request.RegisteredVoiceRequest;
 import com.bankathon.voxisapp.apis.request.ValidatePinRequest;
@@ -23,25 +25,43 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import retrofit2.Call;
 
-public class RegistrationActivity extends Activity {
+public class RegistrationActivity extends AppCompatActivity {
     OnSwipeTouchListener onSwipeTouchListener;
-    String tapString = "";
+    AtomicReference<String> tapString = new AtomicReference<>();
+    AtomicReference<Integer> tapCount = new AtomicReference<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+        tapString.set("");
+        tapCount.set(0);
+        onSwipeTouchListener = new OnSwipeTouchListener(this, findViewById(R.id.fl_register), tapString, tapCount);
 
-        onSwipeTouchListener = new OnSwipeTouchListener(this, findViewById(R.id.fl_register), tapString);
-
-        AudioUtils.textToSpeech("Input your debit card pin");
+       /*AudioUtils.textToSpeech("Input your debit card pin");
         AudioUtils.textToSpeech("Tap for digit and swipe right to confirm");
+       */
+        //doneJob();
+    }
+
+    @Override
+    protected void onResume() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                doneJob();
+            }
+        }).start();
+        super.onResume();
+    }
+
+    private void doneJob() {
         while (true) {
-            if (tapString.length() >= 4) {
+            if (tapString.get().length() >= 4) {
                 break;
             }
         }
-        ValidatePinStatus status = validateDebitCardDetail(tapString);
+        ValidatePinStatus status = validateDebitCardDetail(tapString.get());
 
         if (status.equals(ValidatePinStatus.SUCCESS)) {
             Intent i = new Intent(this.getApplicationContext(), BankActivity.class);
@@ -80,17 +100,20 @@ public class RegistrationActivity extends Activity {
         return response.get();
     }
 
+
     public static class OnSwipeTouchListener implements View.OnTouchListener {
         private final GestureDetector gestureDetector;
         Context context;
-        String tapCountString;
-        Integer tapCount;
+        AtomicReference<String> tapCountString;
+        AtomicReference<Integer> tapCount;
 
-        OnSwipeTouchListener(Context ctx, View mainView, String tapCountString) {
+        OnSwipeTouchListener(Context ctx, View mainView, AtomicReference<String> tapCountString, AtomicReference<Integer> tapCount) {
             gestureDetector = new GestureDetector(ctx, new GestureListener(tapCount));
             mainView.setOnTouchListener(this);
             this.context = ctx;
+            this.tapCount = tapCount;
             this.tapCountString = tapCountString;
+
         }
 
         @Override
@@ -102,10 +125,10 @@ public class RegistrationActivity extends Activity {
                 GestureDetector.SimpleOnGestureListener {
             private static final int SWIPE_THRESHOLD = 100;
             private static final int SWIPE_VELOCITY_THRESHOLD = 100;
-            Integer tapCount;
+            AtomicReference<Integer> tapCount;
 
-            public GestureListener(Integer tapCount) {
-                this.tapCount = 0;
+            public GestureListener(AtomicReference<Integer> tapCount) {
+                this.tapCount = tapCount;
             }
 
             @Override
@@ -134,10 +157,10 @@ public class RegistrationActivity extends Activity {
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
                 //Toast.makeText(context, "on Single Tap Confirmed", Toast.LENGTH_SHORT).show();
-                this.tapCount++;
-                if (this.tapCount > 9) {
+                AudioUtils.count++;
+                if (AudioUtils.count > 9) {
                     AudioUtils.textToSpeech("You tap more than 9 time, tap again");
-                    this.tapCount = 0;
+                    AudioUtils.count = 0;
                 }
                 return super.onSingleTapConfirmed(e);
             }
@@ -174,8 +197,8 @@ public class RegistrationActivity extends Activity {
 
         void onSwipeRight() {
             //Toast.makeText(context, "Swiped Right", Toast.LENGTH_SHORT).show();
-            tapCountString = tapCountString + this.tapCount;
-            this.tapCount = 0;
+            tapCountString.set(tapCountString.get() + AudioUtils.count);
+            AudioUtils.count = 0;
             this.onSwipe.swipeRight();
         }
 

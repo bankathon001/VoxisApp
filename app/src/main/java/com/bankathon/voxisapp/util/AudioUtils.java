@@ -25,6 +25,8 @@ import java.util.concurrent.Future;
 public class AudioUtils {
     private MediaPlayer mediaPlayer = new MediaPlayer();
 
+    public static int count;
+
     public static void convertBytesToFile(byte[] bytearray, Context context) {
 
         //listPath();
