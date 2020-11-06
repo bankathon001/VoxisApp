@@ -45,9 +45,9 @@ public class BankActivity extends Activity {
         new Handler().postDelayed(() -> {
             int count = 0;
 
-            while (true) {
+            AudioUtils.textToSpeech("Hey Neeraj, What you want to do today");
 
-                AudioUtils.textToSpeech("Hello Neeraj, What you want to do today");
+            while (true) {
                 String input = AudioUtils.speechToText();
                 if (input == null) {
                     AudioUtils.textToSpeech("Please say something");
@@ -60,17 +60,19 @@ public class BankActivity extends Activity {
                     list.stream().forEach(item -> {
                         AudioUtils.textToSpeech(item);
                         try {
-                            Thread.sleep(500);
+                            Thread.sleep(300);
                         } catch (InterruptedException e) {
                             Log.e(e.toString(), null);
                         }
                     });
-                } else if (input.toLowerCase().contains("credit")) {
+                    AudioUtils.textToSpeech("That was your last transaction summary");
+                } else if (input.toLowerCase().contains("credit") || input.toLowerCase().contains("due")) {
                     AudioUtils.textToSpeech("Your current due is " + "Rs " + String.format("%04d", new Random().nextInt(10000)));
                 } else if (input.toLowerCase().contains("exit") || input.toLowerCase().contains("logout")) {
                     AudioUtils.textToSpeech("Thank you for banking with voxis");
                     break;
-                } else if (input.toLowerCase().contains("customer") && input.toLowerCase().contains("call")) {
+                } else if (input.toLowerCase().contains("customer") || input.toLowerCase().contains("call")) {
+                    AudioUtils.textToSpeech("Calling to customer care executive");
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
                     callIntent.setData(Uri.parse("tel:9971971868"));
                     startActivity(callIntent);
