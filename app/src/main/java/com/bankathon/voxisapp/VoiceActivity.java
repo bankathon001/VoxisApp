@@ -3,7 +3,10 @@ package com.bankathon.voxisapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
 
 import com.bankathon.voxisapp.apis.AwsApiClient;
 import com.bankathon.voxisapp.apis.request.RegisteredVoiceRequest;
@@ -21,34 +24,40 @@ public class VoiceActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voice);
+    }
 
-        AudioUtils.textToSpeech("App is not register with any voice sample, Initiating the registration process");
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        new Handler().postDelayed(() -> {
+            AudioUtils.textToSpeech("App is not register with any voice sample, Initiating the registration process");
 
-        int count = 0;
-        RegisteredVoiceStatus status = null;
-        AudioUtils.textToSpeech("Please say something to register");
-        String inputFromUser = "";
-        while (true) {
-            inputFromUser = AudioUtils.speechToText();
-            count++;
-            if (count < 3) {
-                AudioUtils.textToSpeech("That was good, please say again");
-            } else {
-                break;
+            int count = 0;
+            RegisteredVoiceStatus status = null;
+            AudioUtils.textToSpeech("Please say something to register");
+            String inputFromUser = "";
+            while (true) {
+                inputFromUser = AudioUtils.speechToText();
+                count++;
+                if (count < 3) {
+                    AudioUtils.textToSpeech("That was good, please say again");
+                } else {
+                    break;
+                }
             }
-        }
-        inputFromUser = inputFromUser == null ? "Hello" : inputFromUser;
-        status = registerVoice(inputFromUser);
-        if (status == null || status.equals(RegisteredVoiceStatus.REGISTERED)) {
-            Intent i = new Intent(this.getApplicationContext(), RegistrationActivity.class);
-            startActivity(i);
-            finish();
-        } else {
-            AudioUtils.textToSpeech("Registration is unsuccessful, Try Again");
-            Intent i = new Intent(this.getApplicationContext(), VoiceActivity.class);
-            startActivity(i);
-            finish();
-        }
+            inputFromUser = inputFromUser == null ? "Hello" : inputFromUser;
+            status = registerVoice(inputFromUser);
+            if (status == null || status.equals(RegisteredVoiceStatus.REGISTERED)) {
+                Intent i = new Intent(this.getApplicationContext(), RegistrationActivity.class);
+                startActivity(i);
+                finish();
+            } else {
+                AudioUtils.textToSpeech("Registration is unsuccessful, Try Again");
+                Intent i = new Intent(this.getApplicationContext(), VoiceActivity.class);
+                startActivity(i);
+                finish();
+            }
+        }, 1000);
     }
 
     private RegisteredVoiceStatus registerVoice(String inputFromUser) {
