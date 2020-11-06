@@ -28,29 +28,26 @@ import retrofit2.Call;
 public class RegistrationActivity extends AppCompatActivity {
     OnSwipeTouchListener onSwipeTouchListener;
     AtomicReference<String> tapString = new AtomicReference<>();
-    AtomicReference<Integer> tapCount = new AtomicReference<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
         tapString.set("");
-        tapCount.set(0);
-        onSwipeTouchListener = new OnSwipeTouchListener(this, findViewById(R.id.fl_register), tapString, tapCount);
+        onSwipeTouchListener = new OnSwipeTouchListener(this, findViewById(R.id.fl_register), tapString);
 
         AudioUtils.textToSpeech("Input your debit card pin");
         AudioUtils.textToSpeech("Tap for digit and swipe right to confirm");
-        //doneJob();
-    }
-
-    @Override
-    protected void onResume() {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 doneJob();
             }
         }).start();
+    }
+
+    @Override
+    protected void onResume() {
         super.onResume();
     }
 
@@ -63,6 +60,7 @@ public class RegistrationActivity extends AppCompatActivity {
         ValidatePinStatus status = validateDebitCardDetail(tapString.get());
 
         if (status.equals(ValidatePinStatus.SUCCESS)) {
+            AudioUtils.textToSpeech("Debit card authentication is successful");
             Intent i = new Intent(this.getApplicationContext(), BankActivity.class);
             startActivity(i);
             finish();
@@ -104,13 +102,11 @@ public class RegistrationActivity extends AppCompatActivity {
         private final GestureDetector gestureDetector;
         Context context;
         AtomicReference<String> tapCountString;
-        AtomicReference<Integer> tapCount;
 
-        OnSwipeTouchListener(Context ctx, View mainView, AtomicReference<String> tapCountString, AtomicReference<Integer> tapCount) {
-            gestureDetector = new GestureDetector(ctx, new GestureListener(tapCount));
+        OnSwipeTouchListener(Context ctx, View mainView, AtomicReference<String> tapCountString) {
+            gestureDetector = new GestureDetector(ctx, new GestureListener());
             mainView.setOnTouchListener(this);
             this.context = ctx;
-            this.tapCount = tapCount;
             this.tapCountString = tapCountString;
 
         }
@@ -124,11 +120,6 @@ public class RegistrationActivity extends AppCompatActivity {
                 GestureDetector.SimpleOnGestureListener {
             private static final int SWIPE_THRESHOLD = 100;
             private static final int SWIPE_VELOCITY_THRESHOLD = 100;
-            AtomicReference<Integer> tapCount;
-
-            public GestureListener(AtomicReference<Integer> tapCount) {
-                this.tapCount = tapCount;
-            }
 
             @Override
             public boolean onDown(MotionEvent e) {
@@ -198,11 +189,14 @@ public class RegistrationActivity extends AppCompatActivity {
             //Toast.makeText(context, "Swiped Right", Toast.LENGTH_SHORT).show();
             tapCountString.set(tapCountString.get() + AudioUtils.count);
             AudioUtils.count = 0;
+            AudioUtils.textToSpeech("please tap for next digit");
             this.onSwipe.swipeRight();
         }
 
         void onSwipeLeft() {
-            Toast.makeText(context, "Swiped Left", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Swiped Left", Toast.LENGTH_SHORT).show();
+            AudioUtils.count = 0;
+            AudioUtils.textToSpeech("please tap again");
             this.onSwipe.swipeLeft();
         }
 
