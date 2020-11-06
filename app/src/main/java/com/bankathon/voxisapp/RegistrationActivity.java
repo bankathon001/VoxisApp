@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bankathon.voxisapp.apis.AwsApiClient;
@@ -33,17 +35,24 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-        tapString.set("");
-        onSwipeTouchListener = new OnSwipeTouchListener(this, findViewById(R.id.fl_register), tapString);
+    }
 
-        AudioUtils.textToSpeech("Input your debit card pin");
-        AudioUtils.textToSpeech("Tap for digit and swipe right to confirm");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                doneJob();
-            }
-        }).start();
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        new Handler().postDelayed(() -> {
+            tapString.set("");
+            onSwipeTouchListener = new OnSwipeTouchListener(this, findViewById(R.id.fl_register), tapString);
+
+            AudioUtils.textToSpeech("Input your debit card pin");
+            AudioUtils.textToSpeech("Tap for digit and swipe right to confirm");
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    doneJob();
+                }
+            }).start();
+        }, 1000);
     }
 
     @Override

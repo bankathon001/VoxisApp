@@ -1,5 +1,6 @@
 package com.bankathon.voxisapp;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -10,6 +11,7 @@ import android.content.Intent;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.telephony.TelephonyManager;
 
 import com.bankathon.voxisapp.apis.AwsApiClient;
@@ -35,36 +37,42 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
 
-        ActivityCompat.requestPermissions(MainActivity.this, new String[]{INTERNET}, 10);
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        new Handler().postDelayed(() -> {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{INTERNET}, 10);
 
-        AudioUtils.textToSpeech("Welcome to Voxis Voice Banking Application");
-        boolean jackIn = getAudioDevicesStatus();
-        if(true) {
-            logger.info( "redirecting to Login Just After Opening");
-            try {
-                redirectIfJackConnected(true);
-            } catch (Exception e) {
-                logger.info(e.toString());
-            }
-        } else {
-            while (!jackIn) {
-                AudioUtils.textToSpeech("Please Connect Headset to Continue");
-                logger.info("Checked if Jack Plugged in or Not");
+            AudioUtils.textToSpeech("Welcome to Voxis Voice Banking Application");
+            boolean jackIn = getAudioDevicesStatus();
+            if(true) {
+                logger.info( "redirecting to Login Just After Opening");
                 try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
+                    redirectIfJackConnected(true);
+                } catch (Exception e) {
                     logger.info(e.toString());
                 }
-                jackIn = getAudioDevicesStatus();
+            } else {
+                while (!jackIn) {
+                    AudioUtils.textToSpeech("Please Connect Headset to Continue");
+                    logger.info("Checked if Jack Plugged in or Not");
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        logger.info(e.toString());
+                    }
+                    jackIn = getAudioDevicesStatus();
+                }
+                logger.info("redirecting to Login");
+                try {
+                    redirectIfJackConnected(jackIn);
+                } catch (Exception e) {
+                    logger.info(e.toString());
+                }
             }
-            logger.info("redirecting to Login");
-            try {
-                redirectIfJackConnected(jackIn);
-            } catch (Exception e) {
-                logger.info(e.toString());
-            }
-        }
+        }, 1000);
     }
 
 

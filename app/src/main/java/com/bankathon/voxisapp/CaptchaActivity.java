@@ -3,9 +3,11 @@ package com.bankathon.voxisapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 
 import com.bankathon.voxisapp.apis.AwsApiClient;
@@ -30,47 +32,53 @@ public class CaptchaActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_captcha);
+    }
 
-        final String captchaString = getCaptcha();
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        new Handler().postDelayed(() -> {
+            final String captchaString = getCaptcha();
 
-        AudioUtils.textToSpeech("Please repeat to login " + captchaString);
+            AudioUtils.textToSpeech("Please repeat to login " + captchaString);
 
-        int count = 0;
-        String inputFromUser = "";
-        while (true) {
-            inputFromUser = AudioUtils.speechToText();
-            if (inputFromUser != null) {
-                //AudioUtils.textToSpeech(inputFromUser);
-                int len = inputFromUser.length() > 2 ? inputFromUser.length() - 2 : inputFromUser.length()-1;
-                if (!inputFromUser.substring(0, len).equalsIgnoreCase(captchaString.substring(0, len))) {
-                    count++;
-                    AudioUtils.textToSpeech("Wrong Input try again by saying " + captchaString);
+            int count = 0;
+            String inputFromUser = "";
+            while (true) {
+                inputFromUser = AudioUtils.speechToText();
+                if (inputFromUser != null) {
+                    //AudioUtils.textToSpeech(inputFromUser);
+                    int len = inputFromUser.length() > 2 ? inputFromUser.length() - 2 : inputFromUser.length()-1;
+                    if (!inputFromUser.substring(0, len).equalsIgnoreCase(captchaString.substring(0, len))) {
+                        count++;
+                        AudioUtils.textToSpeech("Wrong Input try again by saying " + captchaString);
+                    } else {
+                        break;
+                    }
                 } else {
+                    count++;
+                    AudioUtils.textToSpeech("No Input Try again");
+                }
+                if (count >= 3) {
+                    AudioUtils.textToSpeech("Maximum number of attempt finished, Thank you for banking with voxis");
                     break;
                 }
-            } else {
-                count++;
-                AudioUtils.textToSpeech("No Input Try again");
             }
             if (count >= 3) {
-                AudioUtils.textToSpeech("Maximum number of attempt finished, Thank you for banking with voxis");
-                break;
+                finishAndRemoveTask();
             }
-        }
-        if (count >= 3) {
-            finishAndRemoveTask();
-        }
-        VoiceAuthenticateStatus status = authenticateVoice(inputFromUser, captchaString);
-        if (status.equals(VoiceAuthenticateStatus.ACCEPTED)) {
-            Intent i = new Intent(this.getApplicationContext(), BankActivity.class);
-            startActivity(i);
-            finish();
-        } else {
-            AudioUtils.textToSpeech("Authentication is unsuccessful, Try Again");
-            Intent i = new Intent(this.getApplicationContext(), CaptchaActivity.class);
-            startActivity(i);
-            finish();
-        }
+            VoiceAuthenticateStatus status = authenticateVoice(inputFromUser, captchaString);
+            if (status.equals(VoiceAuthenticateStatus.ACCEPTED)) {
+                Intent i = new Intent(this.getApplicationContext(), BankActivity.class);
+                startActivity(i);
+                finish();
+            } else {
+                AudioUtils.textToSpeech("Authentication is unsuccessful, Try Again");
+                Intent i = new Intent(this.getApplicationContext(), CaptchaActivity.class);
+                startActivity(i);
+                finish();
+            }
+        }, 1000);
     }
 
     private String getCaptcha() {
